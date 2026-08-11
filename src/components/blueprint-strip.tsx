@@ -7,7 +7,15 @@ import {
 // Signature element (DESIGN.md): a 1:1 miniature of the official exam
 // blueprint. Segment width = the domain's official weight, fill = the user's
 // mastery of that domain (verified green, seal gold once exam-ready).
-export function BlueprintStrip({ domains }: { domains: DomainProgress[] }) {
+export function BlueprintStrip({
+  domains,
+  className,
+}: {
+  domains: DomainProgress[];
+  // Height override: the dashboard card uses the default h-2.5; the
+  // certification detail view renders the same strip larger as its anchor.
+  className?: string;
+}) {
   const totalWeight =
     domains.reduce((sum, domain) => sum + domain.weight, 0) || 1;
 
@@ -23,7 +31,7 @@ export function BlueprintStrip({ domains }: { domains: DomainProgress[] }) {
       <div
         role="img"
         aria-label={`Exam blueprint — ${description}`}
-        className="flex h-2.5 gap-[3px]"
+        className={cn("flex h-2.5 gap-[3px]", className)}
       >
         {domains.map((domain) => (
           <div

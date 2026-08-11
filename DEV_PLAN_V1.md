@@ -22,7 +22,7 @@
 - [x] Step 3 — Onboarding
 - [x] Step 4 — Dashboard + progress calculation
 - [x] Step 5 — Quiz engine
-- [ ] Step 6 — Certification detail view (by domain)
+- [x] Step 6 — Certification detail view (by domain)
 - [ ] Step 7 — User data export / import
 - [ ] Step 8 — Dockerization (turnkey Local mode)
 - [ ] Step 9 — Vercel deployment readiness
@@ -207,7 +207,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 6 — Certification detail view (by domain) `[ ]`
+## Step 6 — Certification detail view (by domain) `[x]`
 
 **Goal**: provide useful granularity for effective revision.
 

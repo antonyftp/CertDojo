@@ -22,8 +22,9 @@ import type {
 
 // Status chips are worded and colored like score-report bands (DESIGN.md):
 // exam-ready wears the credential-seal gold, in-progress the interactive
-// blue tint, not-started stays quiet.
-const statusChip: Record<
+// blue tint, not-started stays quiet. Shared with the certification detail
+// view so both screens speak the same status vocabulary.
+export const statusChip: Record<
   CertificationStatus,
   { label: string; className: string }
 > = {
@@ -56,7 +57,14 @@ export function CertificationCard({
         <CardDescription className="text-muted-foreground font-mono text-xs tracking-wider uppercase">
           {meta.provider} · {meta.examCode}
         </CardDescription>
-        <CardTitle className="text-base leading-snug">{meta.name}</CardTitle>
+        <CardTitle className="text-base leading-snug">
+          <Link
+            href={`/certifications/${meta.slug}`}
+            className="hover:underline"
+          >
+            {meta.name}
+          </Link>
+        </CardTitle>
         <CardAction>
           <Badge
             variant="outline"
@@ -92,8 +100,11 @@ export function CertificationCard({
           <BlueprintStrip domains={progress.domains} />
         </div>
       </CardContent>
-      <CardFooter>
-        <Button asChild size="sm" className="ml-auto">
+      <CardFooter className="gap-2">
+        <Button asChild size="sm" variant="outline" className="ml-auto">
+          <Link href={`/certifications/${meta.slug}`}>Details</Link>
+        </Button>
+        <Button asChild size="sm">
           <Link href={`/certifications/${meta.slug}/quiz`}>
             Practice
             <ArrowRightIcon aria-hidden="true" />

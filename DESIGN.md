@@ -208,6 +208,85 @@ streaks (spec §2.5).
 **Deliberately omitted**: a per-question timer. CertPrep is a revision tool,
 not an exam simulator; a countdown would add anxiety without adding signal.
 
+---
+
+## Step 6 amendment — certification detail view
+
+The detail route (`/certifications/[slug]`) is the **full score report** for
+one certification — the page the test center hands you, expanded into a
+revision tool. The dashboard card was the summary line; this page is the
+domain-by-domain breakdown table that real score reports print below the
+PASS/FAIL band. Palette, type roles, and the blue-is-interactive contract are
+unchanged.
+
+### Layout
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ CERTPREP///                                        ← Dashboard │
+├────────────────────────────────────────────────────────────────┤
+│ AWS · CLF-C02                                    [IN PROGRESS] │
+│ AWS Certified Cloud Practitioner                               │
+│ Entry-level AWS certification validating…   Official guide ↗   │
+│                                                                │
+│ MASTERY 42% · 27/65 correct · 52/65 answered      (mono line)  │
+│ ▓▓▓▓▓░░░│▓▓▓░░░░░░│▓▓▓▓▓▓░░░░░│▓░░       ← blueprint strip,    │
+│ 24%      30%       34%        12%          enlarged, anchor    │
+│                                                                │
+│ DOMAIN BREAKDOWN                                 (mono kicker) │
+│ ┌────────────────────────────────────────────────────────────┐ │
+│ │ 01  Cloud Concepts             WEIGHT 24% │ [Practice →]   │ │
+│ │     ██████████░░░░░░  63% · 10/16 mastered                 │ │
+│ ├────────────────────────────────────────────────────────────┤ │
+│ │ 02  Security and Compliance    WEIGHT 30% │ [Practice →]   │ │
+│ │     ███░░░░░░░░░░░░░  20% · 4/20 mastered                  │ │
+│ └────────────────────────────────────────────────────────────┘ │
+│                                    [Practice all questions →]  │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Decisions:
+
+- **The blueprint strip is the anchor**, as promised when it was designed:
+  same component as the dashboard card, rendered larger. The domain rows
+  below are its legend expanded into a table — strip segment *n* and row *n*
+  describe the same domain, so the page reads as one artifact, not two.
+- **Domain rows are score-report table rows**, not a grid of stat cards: one
+  ruled list, mono index (`01`, `02`… — exam guides number their domains),
+  domain name in the reading voice, `WEIGHT n%` as a mono kicker, a mastery
+  bar (verified green, seal gold at ≥ 80%) with `x/y mastered` in mono.
+- **Per-domain practice** is the row's only interactive element: a scantron
+  blue link to `/certifications/[slug]/quiz?domain=<id>`. The quiz setup
+  screen shows the domain as a mono kicker (`DOMAIN · CLOUD CONCEPTS`) and
+  its back links return to the detail page instead of the dashboard; batch
+  choices count within the filtered bank only.
+- A domain with zero questions in the bank shows `NO QUESTIONS YET` (mono,
+  muted) instead of a practice link — content contributions may lag the
+  official blueprint.
+- The dashboard card's title links here, and the card footer gains a quiet
+  `Details` outline button beside `Practice` — the primary action on the
+  dashboard stays "start practicing".
+
+### Critique (per §6.2)
+
+*Default answer for a "detail page"*: a stats-card grid (one card per
+domain, each with a donut chart), breadcrumbs, maybe tabs. What differs and
+why:
+
+1. **No donuts, no grid**: domains are rows in a single ruled table, because
+   the real-world artifact being quoted — the score report — is a table. The
+   only chart on the page is the blueprint strip the product is already
+   recognized by.
+2. **Weights stay structural**: the strip encodes weight as width; rows print
+   it as a mono kicker. Nothing re-encodes weight as a second chart, keeping
+   the strip's monopoly on decoration.
+3. **Color contract holds**: mastery bars are green/gold (earned), the status
+   chip reuses the dashboard vocabulary, and blue appears only on links and
+   the practice buttons.
+4. **No tabs/breadcrumbs**: two levels of navigation (dashboard ⇄ detail)
+   don't justify them; a single `← Dashboard` mono link matches the quiz
+   header's existing pattern.
+
 ### Critique (per §6.2)
 
 *Default answer for a quiz UI*: Duolingo/Kahoot-style — centered floating

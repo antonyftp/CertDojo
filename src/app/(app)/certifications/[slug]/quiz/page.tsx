@@ -19,15 +19,40 @@ export async function generateMetadata({
 
 export default async function QuizPage({
   params,
+  searchParams,
 }: PageProps<"/certifications/[slug]/quiz">) {
-  const { slug } = await params;
+  const [{ slug }, { domain: domainParam }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
   const meta = getCertificationBySlug(slug);
 
   if (!meta) {
     notFound();
   }
 
-  const questions = getQuestions(slug);
+  // Optional ?domain=<id> scopes the session to one blueprint domain
+  // (DEV_PLAN_V1.md Step 6): the filter is applied here, server-side, so the
+  // client session never even receives questions outside the domain. An id
+  // that is not in the blueprint is a broken/stale link → 404.
+  let domain: { id: string; name: string } | null = null;
+
+  if (domainParam !== undefined) {
+    const match =
+      typeof domainParam === "string"
+        ? meta.domains.find((candidate) => candidate.id === domainParam)
+        : undefined;
+
+    if (!match) {
+      notFound();
+    }
+
+    domain = { id: match.id, name: match.name };
+  }
+
+  const questions = getQuestions(slug).filter(
+    (question) => domain === null || question.domainId === domain.id,
+  );
   const attempts = await getAttemptsForCertification(slug);
   const domainNames = new Map(
     meta.domains.map((domain) => [domain.id, domain.name]),
@@ -70,6 +95,7 @@ export default async function QuizPage({
       }}
       questions={sessionQuestions}
       initialUnmasteredIds={unmasteredIds}
+      domain={domain}
     />
   );
 }

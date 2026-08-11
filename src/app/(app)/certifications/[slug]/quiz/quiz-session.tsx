@@ -51,10 +51,16 @@ export function QuizSession({
   certification,
   questions,
   initialUnmasteredIds,
+  domain = null,
 }: {
   certification: Certification;
   questions: SessionQuestion[];
   initialUnmasteredIds: string[];
+  // Set when the session is scoped to one blueprint domain (Step 6): the
+  // question list is already filtered server-side; this only drives labels
+  // and sends back links to the certification detail view instead of the
+  // dashboard.
+  domain?: { id: string; name: string } | null;
 }) {
   const [unmasteredIds, setUnmasteredIds] = useState(
     () => new Set(initialUnmasteredIds),
@@ -138,6 +144,11 @@ export function QuizSession({
     setPhase("setup");
   }
 
+  const backHref = domain
+    ? `/certifications/${certification.slug}`
+    : "/dashboard";
+  const backLabel = domain ? "Certification" : "Dashboard";
+
   const currentQuestion = sessionQuestions[currentIndex];
   const correctCount = results.filter((result) => result.isCorrect).length;
   const sessionPercent =
@@ -162,10 +173,10 @@ export function QuizSession({
             </span>
           ) : (
             <Link
-              href="/dashboard"
+              href={backHref}
               className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-widest uppercase"
             >
-              ← Dashboard
+              ← {backLabel}
             </Link>
           )}
         </div>
@@ -191,6 +202,11 @@ export function QuizSession({
                 Practice session
               </h1>
               <p className="text-muted-foreground">{certification.name}</p>
+              {domain ? (
+                <p className="text-muted-foreground mt-1 font-mono text-xs tracking-widest uppercase">
+                  Domain · {domain.name}
+                </p>
+              ) : null}
             </section>
             <section className="grid gap-2" aria-label="Question batch">
               {batchChoices.map((choice) => {
@@ -268,6 +284,7 @@ export function QuizSession({
             <section className="grid gap-4">
               <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
                 Session report · {certification.examCode}
+                {domain ? ` · ${domain.name}` : ""}
               </p>
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
                 <span className="font-mono text-4xl font-semibold">
@@ -299,7 +316,7 @@ export function QuizSession({
                 Practice again
               </Button>
               <Button asChild>
-                <Link href="/dashboard">Back to dashboard</Link>
+                <Link href={backHref}>Back to {backLabel.toLowerCase()}</Link>
               </Button>
             </div>
           </>
