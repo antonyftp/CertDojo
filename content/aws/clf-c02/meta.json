@@ -1,0 +1,26 @@
+{
+  "slug": "clf-c02",
+  "provider": "aws",
+  "name": "AWS Certified Cloud Practitioner",
+  "examCode": "CLF-C02",
+  "description": "Entry-level AWS certification validating an overall understanding of the AWS Cloud: core services, security and compliance, cloud concepts, and billing and support.",
+  "officialUrl": "https://aws.amazon.com/certification/certified-cloud-practitioner/",
+  "domains": [
+    { "id": "cloud-concepts", "name": "Cloud Concepts", "weight": 24 },
+    {
+      "id": "security-and-compliance",
+      "name": "Security and Compliance",
+      "weight": 30
+    },
+    {
+      "id": "cloud-technology-and-services",
+      "name": "Cloud Technology and Services",
+      "weight": 34
+    },
+    {
+      "id": "billing-pricing-and-support",
+      "name": "Billing, Pricing, and Support",
+      "weight": 12
+    }
+  ]
+}

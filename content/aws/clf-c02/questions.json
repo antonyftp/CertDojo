@@ -1,0 +1,307 @@
+[
+  {
+    "id": "clf-c02-0001",
+    "domainId": "cloud-concepts",
+    "question": "Which of the following are benefits of moving on-premises workloads to the AWS Cloud? (Choose TWO.)",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "Trading capital expense for variable expense" },
+      { "id": "b", "text": "Elimination of all operational responsibility" },
+      { "id": "c", "text": "Benefiting from massive economies of scale" },
+      { "id": "d", "text": "Guaranteed zero application downtime" },
+      { "id": "e", "text": "Automatic compliance with all regulations" }
+    ],
+    "correctOptionIds": ["a", "c"],
+    "explanation": "Two of the classic advantages of cloud computing are replacing upfront capital investment with pay-as-you-go variable costs, and benefiting from the lower prices AWS achieves through massive economies of scale. The cloud does not remove all operational responsibility, guarantee zero downtime, or make a workload automatically compliant."
+  },
+  {
+    "id": "clf-c02-0002",
+    "domainId": "cloud-concepts",
+    "question": "Which term describes the ability of a system to acquire resources as demand increases and release them as demand decreases?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "High availability" },
+      { "id": "b", "text": "Elasticity" },
+      { "id": "c", "text": "Fault tolerance" },
+      { "id": "d", "text": "Durability" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "Elasticity is the ability to automatically scale resources out when demand rises and back in when demand drops, so you only pay for what you actually need at any moment."
+  },
+  {
+    "id": "clf-c02-0003",
+    "domainId": "cloud-concepts",
+    "question": "Which of the following are pillars of the AWS Well-Architected Framework? (Choose TWO.)",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "Operational excellence" },
+      { "id": "b", "text": "Vertical scaling" },
+      { "id": "c", "text": "Cost optimization" },
+      { "id": "d", "text": "Serverless computing" },
+      { "id": "e", "text": "Multi-cloud portability" }
+    ],
+    "correctOptionIds": ["a", "c"],
+    "explanation": "The AWS Well-Architected Framework has six pillars: operational excellence, security, reliability, performance efficiency, cost optimization, and sustainability. Vertical scaling, serverless computing, and multi-cloud portability are not pillars."
+  },
+  {
+    "id": "clf-c02-0004",
+    "domainId": "cloud-concepts",
+    "question": "What is an AWS Availability Zone?",
+    "multipleAnswers": false,
+    "options": [
+      {
+        "id": "a",
+        "text": "One or more discrete data centers with redundant power, networking, and connectivity within an AWS Region"
+      },
+      {
+        "id": "b",
+        "text": "A geographic area containing multiple isolated AWS Regions"
+      },
+      {
+        "id": "c",
+        "text": "A content delivery endpoint that caches data close to end users"
+      },
+      {
+        "id": "d",
+        "text": "A logically isolated virtual network within an AWS account"
+      }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "An Availability Zone is one or more discrete data centers within a Region, each with redundant power, networking, and connectivity. Regions contain multiple isolated Availability Zones; edge locations serve content delivery; a VPC is a virtual network."
+  },
+  {
+    "id": "clf-c02-0005",
+    "domainId": "cloud-concepts",
+    "question": "A company wants to migrate an application to AWS without making any changes to the application code. Which migration strategy does this describe?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Refactor" },
+      { "id": "b", "text": "Repurchase" },
+      { "id": "c", "text": "Rehost (lift and shift)" },
+      { "id": "d", "text": "Retire" }
+    ],
+    "correctOptionIds": ["c"],
+    "explanation": "Rehosting, often called lift and shift, moves an application to the cloud as-is, without code changes. Refactoring involves re-architecting the application, repurchasing means moving to a different (often SaaS) product, and retiring means decommissioning it."
+  },
+  {
+    "id": "clf-c02-0006",
+    "domainId": "security-and-compliance",
+    "question": "Which AWS service is used to manage users, groups, roles, and their permissions to access AWS resources?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "AWS IAM" },
+      { "id": "b", "text": "AWS CloudTrail" },
+      { "id": "c", "text": "AWS Config" },
+      { "id": "d", "text": "AWS Shield" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "AWS IAM (Identity and Access Management) manages identities (users, groups, roles) and the policies that grant them permissions. CloudTrail records API activity, Config tracks resource configuration, and Shield protects against DDoS attacks."
+  },
+  {
+    "id": "clf-c02-0007",
+    "domainId": "security-and-compliance",
+    "question": "According to the AWS shared responsibility model, which of the following is a responsibility of AWS?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Configuring security group rules" },
+      { "id": "b", "text": "Physical security of data centers" },
+      { "id": "c", "text": "Encrypting application data stored in Amazon S3" },
+      { "id": "d", "text": "Managing IAM user permissions" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "AWS is responsible for security OF the cloud, which includes the physical security of data centers, hardware, and the underlying infrastructure. Security group rules, data encryption choices, and IAM permissions are customer responsibilities (security IN the cloud)."
+  },
+  {
+    "id": "clf-c02-0008",
+    "domainId": "security-and-compliance",
+    "question": "A company runs an application on Amazon EC2 instances. According to the shared responsibility model, which tasks are the responsibility of the customer? (Choose TWO.)",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "Patching the guest operating system" },
+      { "id": "b", "text": "Maintaining the virtualization hypervisor" },
+      { "id": "c", "text": "Configuring security groups and network ACLs" },
+      { "id": "d", "text": "Replacing failed physical disks" },
+      { "id": "e", "text": "Securing the physical network cabling" }
+    ],
+    "correctOptionIds": ["a", "c"],
+    "explanation": "For EC2, the customer manages everything from the guest operating system upward: OS patching and firewall configuration such as security groups and network ACLs. The hypervisor, physical disks, and physical network are managed by AWS."
+  },
+  {
+    "id": "clf-c02-0009",
+    "domainId": "security-and-compliance",
+    "question": "Which AWS service records API calls made in an AWS account and delivers the log of those calls for auditing?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Amazon CloudWatch" },
+      { "id": "b", "text": "AWS CloudTrail" },
+      { "id": "c", "text": "AWS Trusted Advisor" },
+      { "id": "d", "text": "Amazon Inspector" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "AWS CloudTrail records API calls and account activity for governance and auditing. CloudWatch collects metrics and logs, Trusted Advisor provides best-practice checks, and Inspector scans workloads for vulnerabilities."
+  },
+  {
+    "id": "clf-c02-0010",
+    "domainId": "security-and-compliance",
+    "question": "Which of the following is a security best practice for the AWS account root user?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Use the root user for daily administrative tasks" },
+      {
+        "id": "b",
+        "text": "Share the root user credentials with the operations team"
+      },
+      {
+        "id": "c",
+        "text": "Enable multi-factor authentication (MFA) on the root user"
+      },
+      {
+        "id": "d",
+        "text": "Create access keys for the root user for use in scripts"
+      }
+    ],
+    "correctOptionIds": ["c"],
+    "explanation": "AWS recommends enabling MFA on the root user, locking away its credentials, avoiding root access keys entirely, and using IAM identities for daily work instead of the root user."
+  },
+  {
+    "id": "clf-c02-0011",
+    "domainId": "security-and-compliance",
+    "question": "Which AWS service provides protection against distributed denial of service (DDoS) attacks?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "AWS Shield" },
+      { "id": "b", "text": "AWS Secrets Manager" },
+      { "id": "c", "text": "Amazon GuardDuty" },
+      { "id": "d", "text": "AWS Key Management Service (AWS KMS)" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "AWS Shield provides managed DDoS protection (Standard is enabled automatically, Advanced is a paid tier). Secrets Manager stores secrets, GuardDuty is a threat detection service, and KMS manages encryption keys."
+  },
+  {
+    "id": "clf-c02-0012",
+    "domainId": "cloud-technology-and-services",
+    "question": "Which AWS service provides durable object storage for files such as images, backups, and static assets?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Amazon EBS" },
+      { "id": "b", "text": "Amazon S3" },
+      { "id": "c", "text": "Amazon EFS" },
+      { "id": "d", "text": "AWS Storage Gateway" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "Amazon S3 is AWS's object storage service, designed for eleven nines of durability. EBS provides block storage volumes for EC2, EFS is a shared file system, and Storage Gateway connects on-premises environments to AWS storage."
+  },
+  {
+    "id": "clf-c02-0013",
+    "domainId": "cloud-technology-and-services",
+    "question": "Which AWS service lets you run code in response to events without provisioning or managing servers?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Amazon EC2" },
+      { "id": "b", "text": "Amazon ECS on EC2 launch type" },
+      { "id": "c", "text": "AWS Lambda" },
+      { "id": "d", "text": "Amazon Lightsail" }
+    ],
+    "correctOptionIds": ["c"],
+    "explanation": "AWS Lambda is a serverless compute service: you upload code and it runs in response to events, with no servers to provision or manage. EC2, ECS on EC2, and Lightsail all involve managing server instances."
+  },
+  {
+    "id": "clf-c02-0014",
+    "domainId": "cloud-technology-and-services",
+    "question": "Which of the following are fully managed AWS database services? (Choose TWO.)",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "Amazon RDS" },
+      { "id": "b", "text": "Amazon EC2" },
+      { "id": "c", "text": "Amazon DynamoDB" },
+      { "id": "d", "text": "Amazon EBS" },
+      { "id": "e", "text": "AWS Fargate" }
+    ],
+    "correctOptionIds": ["a", "c"],
+    "explanation": "Amazon RDS is a managed relational database service and Amazon DynamoDB is a managed NoSQL database. EC2 is compute, EBS is block storage, and Fargate is a serverless container compute engine — a database could run on them, but they are not database services."
+  },
+  {
+    "id": "clf-c02-0015",
+    "domainId": "cloud-technology-and-services",
+    "question": "Which AWS service is a content delivery network (CDN) that delivers content to users with low latency from edge locations?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Amazon CloudFront" },
+      { "id": "b", "text": "AWS Direct Connect" },
+      { "id": "c", "text": "Elastic Load Balancing" },
+      { "id": "d", "text": "AWS Global Accelerator" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Amazon CloudFront caches and serves content from AWS edge locations close to users. Direct Connect is a dedicated network link to AWS, ELB distributes traffic across targets, and Global Accelerator optimizes network paths but is not a caching CDN."
+  },
+  {
+    "id": "clf-c02-0016",
+    "domainId": "cloud-technology-and-services",
+    "question": "A company needs an encrypted connection between its on-premises network and its Amazon VPC over the public internet. Which AWS offering meets this requirement?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "AWS Direct Connect" },
+      { "id": "b", "text": "AWS Site-to-Site VPN" },
+      { "id": "c", "text": "VPC peering" },
+      { "id": "d", "text": "An internet gateway" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "AWS Site-to-Site VPN creates encrypted IPsec tunnels between an on-premises network and a VPC over the internet. Direct Connect is a dedicated private link (not over the internet), VPC peering connects VPCs to each other, and an internet gateway provides general internet access."
+  },
+  {
+    "id": "clf-c02-0017",
+    "domainId": "cloud-technology-and-services",
+    "question": "Which AWS service provides a highly available and scalable Domain Name System (DNS)?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Amazon Route 53" },
+      { "id": "b", "text": "Amazon API Gateway" },
+      { "id": "c", "text": "AWS PrivateLink" },
+      { "id": "d", "text": "Amazon VPC" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Amazon Route 53 is AWS's managed DNS service, handling domain registration, DNS routing, and health checks. API Gateway manages APIs, PrivateLink provides private connectivity to services, and VPC is a virtual network."
+  },
+  {
+    "id": "clf-c02-0018",
+    "domainId": "billing-pricing-and-support",
+    "question": "A company has a steady, predictable Amazon EC2 workload and wants the largest discount in exchange for a 1-year or 3-year commitment. Which pricing option should it choose?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "On-Demand Instances" },
+      { "id": "b", "text": "Spot Instances" },
+      { "id": "c", "text": "Reserved Instances" },
+      { "id": "d", "text": "Dedicated Hosts with On-Demand pricing" }
+    ],
+    "correctOptionIds": ["c"],
+    "explanation": "Reserved Instances (like Savings Plans) offer significant discounts over On-Demand in exchange for a 1-year or 3-year commitment, fitting steady, predictable workloads. Spot Instances are cheap but interruptible, and On-Demand carries no commitment or discount."
+  },
+  {
+    "id": "clf-c02-0019",
+    "domainId": "billing-pricing-and-support",
+    "question": "Which AWS tool should a company use to estimate the monthly cost of a planned architecture before deploying it?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "AWS Cost Explorer" },
+      { "id": "b", "text": "AWS Pricing Calculator" },
+      { "id": "c", "text": "AWS Budgets" },
+      { "id": "d", "text": "AWS Cost and Usage Report" }
+    ],
+    "correctOptionIds": ["b"],
+    "explanation": "The AWS Pricing Calculator estimates costs for planned workloads before deployment. Cost Explorer and the Cost and Usage Report analyze existing spending, and AWS Budgets alerts on actual or forecasted spend against thresholds."
+  },
+  {
+    "id": "clf-c02-0020",
+    "domainId": "billing-pricing-and-support",
+    "question": "Which AWS Support plan includes a designated Technical Account Manager (TAM)?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Developer" },
+      { "id": "b", "text": "Business" },
+      { "id": "c", "text": "Enterprise" },
+      { "id": "d", "text": "Basic" }
+    ],
+    "correctOptionIds": ["c"],
+    "explanation": "The Enterprise Support plan (and Enterprise On-Ramp, with a pooled model) provides access to a Technical Account Manager. Basic, Developer, and Business plans do not include a designated TAM."
+  }
+]

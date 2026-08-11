@@ -18,7 +18,7 @@
 
 - [x] Step 0 — Project initialization *(done via GitHub Copilot scaffold, PR #1 — see audit notes below)*
 - [x] Step 1 — Data layer (Drizzle, dual dialect)
-- [ ] Step 2 — Content structure + validation
+- [x] Step 2 — Content structure + validation
 - [ ] Step 3 — Onboarding
 - [ ] Step 4 — Dashboard + progress calculation
 - [ ] Step 5 — Quiz engine
@@ -131,7 +131,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 2 — Content structure + validation `[ ]`
+## Step 2 — Content structure + validation `[x]`
 
 **Goal**: be able to store and validate question banks, with one complete sample certification.
 
