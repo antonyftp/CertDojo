@@ -21,7 +21,7 @@
 - [x] Step 2 — Content structure + validation
 - [x] Step 3 — Onboarding
 - [x] Step 4 — Dashboard + progress calculation
-- [ ] Step 5 — Quiz engine
+- [x] Step 5 — Quiz engine
 - [ ] Step 6 — Certification detail view (by domain)
 - [ ] Step 7 — User data export / import
 - [ ] Step 8 — Dockerization (turnkey Local mode)
@@ -188,7 +188,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 5 — Quiz engine `[ ]`
+## Step 5 — Quiz engine `[x]`
 
 **Goal**: actually be able to answer questions and see progress change accordingly.
 

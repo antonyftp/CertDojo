@@ -1,10 +1,15 @@
+import Link from "next/link";
+import { ArrowRightIcon } from "lucide-react";
+
 import { BlueprintStrip } from "@/components/blueprint-strip";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -87,6 +92,14 @@ export function CertificationCard({
           <BlueprintStrip domains={progress.domains} />
         </div>
       </CardContent>
+      <CardFooter>
+        <Button asChild size="sm" className="ml-auto">
+          <Link href={`/certifications/${meta.slug}/quiz`}>
+            Practice
+            <ArrowRightIcon aria-hidden="true" />
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

@@ -134,3 +134,92 @@ draft, and what changed:
 **Kept deliberately generic**: card grid + centered column. A revision tool
 should be spatially boring; the signature lives inside the cards, not in an
 exotic layout.
+
+---
+
+## Step 5 amendment — quiz session screens
+
+The quiz route (`/certifications/[slug]/quiz`) is one page with three states.
+Palette, type roles, and the blue-is-interactive contract are unchanged; the
+visual language extends the same exam artifacts: the session setup is the
+**exam form** you fill in before starting, answering is **marking the answer
+sheet**, and the end screen is the **score report**.
+
+### State 1 — Session setup (the exam form)
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ CERTPREP///                                 ← Back to dashboard│
+├────────────────────────────────────────────────────────────────┤
+│ AWS · CLF-C02                                     (mono kicker)│
+│ Practice session                                               │
+│                                                                │
+│ ┌ ( ) ALL QUESTIONS ······················· 20 ┐               │
+│ ┌ (•) NOT YET MASTERED ···················· 13 ┐               │
+│ ┌ ( ) 10 RANDOM ··························· 10 ┐               │
+│                                                                │
+│                                              [Start session]   │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Batch choices are radio rows in the data voice (mono, counts right-aligned),
+matching the dev plan's "all / not-yet-mastered / N random". A random size is
+only offered when it is smaller than the bank; "not yet mastered" is disabled
+with a note when nothing remains.
+
+### State 2 — Question (marking the sheet)
+
+Per the existing sketch, plus these decisions:
+
+- **Bubble letters**: each option row leads with a mono bubble `(a)`, `(b)`…
+  (display letters by position, independent of content option ids). Selecting
+  fills the bubble solid graphite — literally penciling in the bubble.
+- **Multi-answer questions** print the instruction real exams print: a mono
+  kicker `SELECT 2 ANSWERS` (count = number of correct options — the same
+  information "(Choose TWO)" reveals on a real exam). Submit stays disabled
+  until exactly that many are selected; single-answer questions submit with
+  one.
+- **Grading is inline on the rows**, like a marked answer sheet — never a
+  toast or banner. Correct options tint verified green with `✓`; a selected
+  wrong option tints flag red with `✕`; unselected wrong options stay quiet.
+  A mono verdict (`✓ CORRECT` / `✕ INCORRECT`) and the explanation unfold
+  below in a left-ruled panel with an `EXPLANATION` kicker.
+- The header carries `EXAM-CODE · QUESTION 4/10 · DOMAIN` in mono and the
+  session progress bar in scantron blue (position in the session — this is
+  navigation, not earned mastery, so blue is correct here).
+- Answers are graded server-side; the client never receives
+  `correctOptionIds`/`explanation` until after submitting — the app behaves
+  like a proctored exam, not a flashcard with the answer on the back.
+
+### State 3 — Session report (the score report)
+
+```
+│ SESSION REPORT                                    (mono kicker)│
+│ 7/10 · 70%                            [IN PROGRESS-style band] │
+│ 7 correct · 3 incorrect                                        │
+│                          [Practice again] [Back to dashboard]  │
+```
+
+Big mono score, one status band (seal gold `EXAM-READY PACE` at ≥ 80%,
+quiet neutral `KEEP PRACTICING` otherwise — reusing the dashboard's
+threshold, not inventing a new scale), then two actions. No confetti, no
+streaks (spec §2.5).
+
+**Deliberately omitted**: a per-question timer. CertPrep is a revision tool,
+not an exam simulator; a countdown would add anxiety without adding signal.
+
+### Critique (per §6.2)
+
+*Default answer for a quiz UI*: Duolingo/Kahoot-style — centered floating
+card, big colorful answer buttons, toast/banner feedback ("Correct! 🎉"),
+progress dots, celebratory end screen. What differs here and why:
+
+1. Feedback lands **on the option rows themselves** (a marked answer sheet),
+   with the explanation as a ruled panel — no toasts, no emoji, no motion
+   beyond the panel unfolding.
+2. The bubble-letter fill ties selection to the OMR identity established on
+   the dashboard; option rows read as a form, not as buttons.
+3. The end screen is a score report with the same status-band vocabulary as
+   the dashboard cards — the quiz and dashboard speak one language.
+4. Blue/green/gold contract holds: session progress is blue (navigation),
+   correctness is green/red (earned), the ≥80% band is the only gold.

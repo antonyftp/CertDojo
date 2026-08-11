@@ -29,6 +29,17 @@ export async function getActiveTrackedCertifications() {
     .orderBy(schema.userCertifications.addedAt, schema.userCertifications.id);
 }
 
+// Attempts for one certification, used by the quiz page to know which
+// questions are not yet mastered (latest attempt missing or incorrect).
+export async function getAttemptsForCertification(certificationSlug: string) {
+  const { db, schema } = getDatabase();
+
+  return db
+    .select()
+    .from(schema.questionAttempts)
+    .where(eq(schema.questionAttempts.certificationSlug, certificationSlug));
+}
+
 // All attempts, grouped by certification slug: one query feeds every
 // dashboard card (attempts only exist for questions the user actually saw,
 // so the full table stays small in a single-user app).
