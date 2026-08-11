@@ -1,59 +1,77 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Palette and typography are defined in DESIGN.md (SPECIFICATIONS.md §6.2):
+   answer-sheet paper, pencil graphite, scantron blue (interactive only),
+   score-report green/red, credential-seal gold. Dark mode follows the OS
+   preference for now; the explicit light/dark toggle (spec §6.1) ships with
+   the settings screen. */
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --background: #f5f7fa;
+  --foreground: #232830;
+  --card: #ffffff;
+  --card-foreground: #232830;
+  --popover: #ffffff;
+  --popover-foreground: #232830;
+  --primary: #2f5ea8;
+  --primary-foreground: #f8fafc;
+  --secondary: #e7ecf2;
+  --secondary-foreground: #232830;
+  --muted: #ecf0f4;
+  --muted-foreground: #5b6472;
+  --accent: #e1e9f4;
+  --accent-foreground: #1f3a6e;
+  --destructive: #b3372b;
+  --border: #d8dee6;
+  --input: #d8dee6;
+  --ring: #2f5ea8;
+  --mastery: #1e7a4e;
+  --seal: #a87b1f;
+  --chart-1: #2f5ea8;
+  --chart-2: #1e7a4e;
+  --chart-3: #a87b1f;
+  --chart-4: #b3372b;
+  --chart-5: #5b6472;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.269 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.371 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #14171d;
+    --foreground: #e8ebf0;
+    --card: #1c2027;
+    --card-foreground: #e8ebf0;
+    --popover: #232833;
+    --popover-foreground: #e8ebf0;
+    --primary: #8aaee8;
+    --primary-foreground: #101b30;
+    --secondary: #262c36;
+    --secondary-foreground: #e8ebf0;
+    --muted: #262c36;
+    --muted-foreground: #98a2b0;
+    --accent: #2a3547;
+    --accent-foreground: #c9d9f2;
+    --destructive: #e0604f;
+    --border: rgb(255 255 255 / 10%);
+    --input: rgb(255 255 255 / 14%);
+    --ring: #6e93d4;
+    --mastery: #41a97a;
+    --seal: #d3a945;
+    --chart-1: #8aaee8;
+    --chart-2: #41a97a;
+    --chart-3: #d3a945;
+    --chart-4: #e0604f;
+    --chart-5: #98a2b0;
+  }
+}
+
+@theme {
+  --font-sans:
+    "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 @theme inline {
@@ -79,6 +97,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-mastery: var(--mastery);
+  --color-seal: var(--seal);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);

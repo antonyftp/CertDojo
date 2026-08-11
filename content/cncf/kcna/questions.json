@@ -1,0 +1,237 @@
+[
+  {
+    "id": "kcna-0001",
+    "domainId": "kubernetes-fundamentals",
+    "question": "What is the smallest deployable unit of computing in Kubernetes?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "A Pod" },
+      { "id": "b", "text": "A container" },
+      { "id": "c", "text": "A Deployment" },
+      { "id": "d", "text": "A Node" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "A Pod is the smallest deployable unit in Kubernetes. It wraps one or more containers that share networking and storage; containers are never scheduled directly."
+  },
+  {
+    "id": "kcna-0002",
+    "domainId": "kubernetes-fundamentals",
+    "question": "Which control plane component stores the cluster's state and configuration data?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "etcd" },
+      { "id": "b", "text": "kube-scheduler" },
+      { "id": "c", "text": "kubelet" },
+      { "id": "d", "text": "CoreDNS" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "etcd is the consistent, distributed key-value store that holds all cluster state. The API server is the only component that talks to it directly."
+  },
+  {
+    "id": "kcna-0003",
+    "domainId": "kubernetes-fundamentals",
+    "question": "Which component is responsible for assigning newly created Pods to suitable nodes?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "kube-scheduler" },
+      { "id": "b", "text": "kube-proxy" },
+      { "id": "c", "text": "kube-controller-manager" },
+      { "id": "d", "text": "kubelet" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "The kube-scheduler watches for Pods without a node assignment and selects a node for them based on resource requests, affinity rules, taints, and other constraints."
+  },
+  {
+    "id": "kcna-0004",
+    "domainId": "kubernetes-fundamentals",
+    "question": "Which of the following are built-in Kubernetes Service types? (Select all that apply.)",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "ClusterIP" },
+      { "id": "b", "text": "NodePort" },
+      { "id": "c", "text": "LoadBalancer" },
+      { "id": "d", "text": "ProxyPort" }
+    ],
+    "correctOptionIds": ["a", "b", "c"],
+    "explanation": "ClusterIP, NodePort, LoadBalancer (and ExternalName) are the built-in Service types. ProxyPort does not exist."
+  },
+  {
+    "id": "kcna-0005",
+    "domainId": "kubernetes-fundamentals",
+    "question": "What is the primary purpose of Kubernetes namespaces?",
+    "multipleAnswers": false,
+    "options": [
+      {
+        "id": "a",
+        "text": "Logically partitioning cluster resources between teams or applications"
+      },
+      { "id": "b", "text": "Encrypting network traffic between Pods" },
+      { "id": "c", "text": "Isolating containers at the kernel level" },
+      { "id": "d", "text": "Distributing Pods across physical data centers" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Namespaces provide logical separation of resources (names, quotas, access control) within one cluster. They are not a kernel-level or network-encryption mechanism."
+  },
+  {
+    "id": "kcna-0006",
+    "domainId": "kubernetes-fundamentals",
+    "question": "Which node component ensures that the containers described in PodSpecs are running and healthy on its node?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "kubelet" },
+      { "id": "b", "text": "kube-apiserver" },
+      { "id": "c", "text": "etcd" },
+      { "id": "d", "text": "cloud-controller-manager" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "The kubelet is the agent running on every node. It registers the node, watches for assigned Pods, and keeps their containers running via the container runtime."
+  },
+  {
+    "id": "kcna-0007",
+    "domainId": "container-orchestration",
+    "question": "What does the Open Container Initiative (OCI) define?",
+    "multipleAnswers": false,
+    "options": [
+      {
+        "id": "a",
+        "text": "Open standards for container image formats and runtimes"
+      },
+      { "id": "b", "text": "A container registry service hosted by the CNCF" },
+      { "id": "c", "text": "A Kubernetes distribution for edge devices" },
+      { "id": "d", "text": "A virtual machine packaging format" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "The OCI maintains open specifications for container images (image-spec), runtimes (runtime-spec), and distribution, so images built with one tool run anywhere."
+  },
+  {
+    "id": "kcna-0008",
+    "domainId": "container-orchestration",
+    "question": "Through which interface does Kubernetes communicate with container runtimes such as containerd?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "The Container Runtime Interface (CRI)" },
+      { "id": "b", "text": "The Container Network Interface (CNI)" },
+      { "id": "c", "text": "The Container Storage Interface (CSI)" },
+      { "id": "d", "text": "The Docker Engine API" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "The kubelet talks to container runtimes through the CRI, a gRPC interface. CNI covers networking and CSI covers storage; the Docker Engine API is not used since dockershim was removed."
+  },
+  {
+    "id": "kcna-0009",
+    "domainId": "cloud-native-architecture",
+    "question": "Which characteristics describe a cloud native application? (Select all that apply.)",
+    "multipleAnswers": true,
+    "options": [
+      {
+        "id": "a",
+        "text": "Built from loosely coupled services such as microservices"
+      },
+      {
+        "id": "b",
+        "text": "Managed through declarative, automation-friendly APIs"
+      },
+      {
+        "id": "c",
+        "text": "Deployed as a single monolith tied to one machine"
+      },
+      { "id": "d", "text": "Scaled only through manual operator intervention" }
+    ],
+    "correctOptionIds": ["a", "b"],
+    "explanation": "Cloud native applications favor loosely coupled services, declarative configuration, and automation (resilience, observability, autoscaling) — the opposite of machine-bound monoliths and manual-only scaling."
+  },
+  {
+    "id": "kcna-0010",
+    "domainId": "cloud-native-architecture",
+    "question": "What does the Horizontal Pod Autoscaler (HPA) do?",
+    "multipleAnswers": false,
+    "options": [
+      {
+        "id": "a",
+        "text": "Adjusts the number of Pod replicas based on observed metrics such as CPU utilization"
+      },
+      {
+        "id": "b",
+        "text": "Increases the CPU and memory limits of a running Pod"
+      },
+      {
+        "id": "c",
+        "text": "Adds new nodes to the cluster when capacity runs out"
+      },
+      { "id": "d", "text": "Balances network traffic between Services" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "The HPA scales the replica count of a workload based on metrics. Resizing Pod resources is vertical scaling, and adding nodes is the Cluster Autoscaler's job."
+  },
+  {
+    "id": "kcna-0011",
+    "domainId": "cloud-native-observability",
+    "question": "Which CNCF project is the de facto standard for metrics collection and alerting in cloud native environments?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Prometheus" },
+      { "id": "b", "text": "Fluentd" },
+      { "id": "c", "text": "Jaeger" },
+      { "id": "d", "text": "Envoy" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Prometheus collects time-series metrics and powers alerting. Fluentd handles logs, Jaeger handles distributed tracing, and Envoy is a service proxy."
+  },
+  {
+    "id": "kcna-0012",
+    "domainId": "cloud-native-observability",
+    "question": "Which three signal types are commonly described as the pillars of observability?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Metrics, logs, and traces" },
+      { "id": "b", "text": "Alerts, dashboards, and reports" },
+      { "id": "c", "text": "Events, backups, and snapshots" },
+      { "id": "d", "text": "Uptime, latency, and throughput" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Observability is usually built on metrics (numeric time series), logs (event records), and traces (request paths across services)."
+  },
+  {
+    "id": "kcna-0013",
+    "domainId": "application-delivery",
+    "question": "What is Helm used for in the Kubernetes ecosystem?",
+    "multipleAnswers": false,
+    "options": [
+      {
+        "id": "a",
+        "text": "Packaging and deploying Kubernetes applications as versioned charts"
+      },
+      { "id": "b", "text": "Scanning container images for vulnerabilities" },
+      { "id": "c", "text": "Providing persistent storage volumes" },
+      { "id": "d", "text": "Encrypting Secrets stored in etcd" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Helm is the package manager for Kubernetes: applications are templated and versioned as charts that can be installed, upgraded, and rolled back."
+  },
+  {
+    "id": "kcna-0014",
+    "domainId": "application-delivery",
+    "question": "Which practices are core to the GitOps approach? (Select all that apply.)",
+    "multipleAnswers": true,
+    "options": [
+      {
+        "id": "a",
+        "text": "Storing the desired system state declaratively in Git as the single source of truth"
+      },
+      {
+        "id": "b",
+        "text": "Using an automated agent to continuously reconcile the cluster with the repository"
+      },
+      {
+        "id": "c",
+        "text": "Applying production changes manually with ad-hoc kubectl edits"
+      },
+      {
+        "id": "d",
+        "text": "Keeping the desired state only inside the running cluster"
+      }
+    ],
+    "correctOptionIds": ["a", "b"],
+    "explanation": "GitOps (as implemented by Argo CD or Flux) keeps declarative desired state in Git and lets an in-cluster agent reconcile reality against it. Manual drift-inducing edits are what GitOps eliminates."
+  }
+]

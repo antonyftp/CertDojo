@@ -1,0 +1,35 @@
+{
+  "slug": "kcna",
+  "provider": "cncf",
+  "name": "Kubernetes and Cloud Native Associate",
+  "examCode": "KCNA",
+  "description": "Entry-level CNCF certification covering Kubernetes fundamentals and the cloud native ecosystem: orchestration, architecture, observability, and application delivery.",
+  "officialUrl": "https://www.cncf.io/training/certification/kcna/",
+  "domains": [
+    {
+      "id": "kubernetes-fundamentals",
+      "name": "Kubernetes Fundamentals",
+      "weight": 46
+    },
+    {
+      "id": "container-orchestration",
+      "name": "Container Orchestration",
+      "weight": 22
+    },
+    {
+      "id": "cloud-native-architecture",
+      "name": "Cloud Native Architecture",
+      "weight": 16
+    },
+    {
+      "id": "cloud-native-observability",
+      "name": "Cloud Native Observability",
+      "weight": 8
+    },
+    {
+      "id": "application-delivery",
+      "name": "Cloud Native Application Delivery",
+      "weight": 8
+    }
+  ]
+}

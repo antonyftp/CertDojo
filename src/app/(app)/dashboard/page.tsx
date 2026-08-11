@@ -1,61 +1,115 @@
-import { eq } from "drizzle-orm";
+import {
+  AddCertificationDialog,
+  type ProviderGroup,
+} from "@/components/add-certification-dialog";
+import {
+  CertificationCard,
+  MissingContentCard,
+} from "@/components/certification-card";
+import {
+  getActiveTrackedCertifications,
+  getAttemptsByCertification,
+  getUserProfile,
+} from "@/db/queries";
+import {
+  getAllCertifications,
+  getCertificationBySlug,
+  getQuestions,
+} from "@/lib/content/loader";
+import { computeCertificationProgress } from "@/lib/progress/progress";
 
-import { getDatabase } from "@/db/client";
-import { getUserProfile } from "@/db/queries";
-import { getCertificationBySlug } from "@/lib/content/loader";
-
-// Minimal placeholder: Step 4 replaces this with the real dashboard (cards,
-// progress bars, per-certification status) behind a §6.2 design plan.
 export default async function DashboardPage() {
   // The (app) layout guarantees a completed profile at this point.
   const profile = (await getUserProfile())!;
+  const [tracked, attemptsBySlug] = await Promise.all([
+    getActiveTrackedCertifications(),
+    getAttemptsByCertification(),
+  ]);
 
-  const { db, schema } = getDatabase();
-  const tracked = await db
-    .select()
-    .from(schema.userCertifications)
-    .where(eq(schema.userCertifications.isActive, true));
+  const cards = tracked.map((row) => {
+    const meta = getCertificationBySlug(row.certificationSlug);
+
+    if (!meta) {
+      return { id: row.id, slug: row.certificationSlug, meta: null };
+    }
+
+    const progress = computeCertificationProgress(
+      meta,
+      getQuestions(meta.slug),
+      attemptsBySlug.get(meta.slug) ?? [],
+    );
+
+    return { id: row.id, slug: meta.slug, meta, progress };
+  });
+
+  const trackedSlugs = new Set(tracked.map((row) => row.certificationSlug));
+  const availableGroups: ProviderGroup[] = [];
+
+  for (const meta of getAllCertifications()) {
+    if (trackedSlugs.has(meta.slug)) {
+      continue;
+    }
+
+    const choice = {
+      slug: meta.slug,
+      name: meta.name,
+      examCode: meta.examCode,
+    };
+    const group = availableGroups.find((g) => g.provider === meta.provider);
+
+    if (group) {
+      group.certifications.push(choice);
+    } else {
+      availableGroups.push({
+        provider: meta.provider,
+        certifications: [choice],
+      });
+    }
+  }
 
   return (
-    <main className="mx-auto grid w-full max-w-3xl gap-8 px-6 py-16">
-      <header className="grid gap-2">
-        <p className="text-muted-foreground text-sm font-medium tracking-[0.3em] uppercase">
-          CertPrep
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Welcome, {profile.name}
-        </h1>
-        <p className="text-muted-foreground text-base leading-7">
-          {profile.jobTitle}
-        </p>
+    <div className="min-h-dvh">
+      <header className="bg-card border-b">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
+          <span className="font-mono text-sm font-semibold tracking-widest">
+            CERTPREP<span className="text-primary">{"///"}</span>
+          </span>
+          <AddCertificationDialog providerGroups={availableGroups} />
+        </div>
       </header>
-      <section className="grid gap-3">
-        <h2 className="text-lg font-medium">Tracked certifications</h2>
-        <ul className="grid gap-2">
-          {tracked.map((row) => {
-            const meta = getCertificationBySlug(row.certificationSlug);
-
-            return (
-              <li
-                key={row.id}
-                className="border-border rounded-lg border px-4 py-3"
-              >
-                <span className="font-medium">
-                  {meta?.name ?? row.certificationSlug}
-                </span>{" "}
-                <span className="text-muted-foreground text-sm">
-                  {meta
-                    ? `${meta.provider.toUpperCase()} · ${meta.examCode}`
-                    : ""}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="text-muted-foreground text-sm">
-          Progress tracking arrives with the full dashboard in the next step.
-        </p>
-      </section>
-    </main>
+      <main className="mx-auto grid w-full max-w-5xl gap-8 px-6 py-10">
+        <section className="grid gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Welcome back, {profile.name}
+          </h1>
+          <p className="text-muted-foreground">{profile.jobTitle}</p>
+          <p className="text-muted-foreground mt-2 font-mono text-xs tracking-widest uppercase">
+            {cards.length} certification{cards.length === 1 ? "" : "s"} tracked
+          </p>
+        </section>
+        {cards.length === 0 ? (
+          <section className="border-border grid place-items-center gap-2 rounded-xl border border-dashed px-6 py-16 text-center">
+            <p className="font-medium">No certifications tracked yet.</p>
+            <p className="text-muted-foreground text-sm">
+              Use “Track certification” above to pick one and start practicing.
+            </p>
+          </section>
+        ) : (
+          <section className="grid gap-4 md:grid-cols-2">
+            {cards.map((card) =>
+              card.meta ? (
+                <CertificationCard
+                  key={card.id}
+                  meta={card.meta}
+                  progress={card.progress}
+                />
+              ) : (
+                <MissingContentCard key={card.id} slug={card.slug} />
+              ),
+            )}
+          </section>
+        )}
+      </main>
+    </div>
   );
 }

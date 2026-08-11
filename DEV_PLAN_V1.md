@@ -20,7 +20,7 @@
 - [x] Step 1 — Data layer (Drizzle, dual dialect)
 - [x] Step 2 — Content structure + validation
 - [x] Step 3 — Onboarding
-- [ ] Step 4 — Dashboard + progress calculation
+- [x] Step 4 — Dashboard + progress calculation
 - [ ] Step 5 — Quiz engine
 - [ ] Step 6 — Certification detail view (by domain)
 - [ ] Step 7 — User data export / import
@@ -170,7 +170,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 4 — Dashboard + progress calculation `[ ]`
+## Step 4 — Dashboard + progress calculation `[x]`
 
 **Goal**: visualize, for each tracked certification, real progress (even before the quiz engine exists — numbers will be at 0, but the mechanism must be in place).
 

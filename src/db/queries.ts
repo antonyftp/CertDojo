@@ -18,3 +18,35 @@ export async function getUserProfile() {
 
   return profile ?? null;
 }
+
+export async function getActiveTrackedCertifications() {
+  const { db, schema } = getDatabase();
+
+  return db
+    .select()
+    .from(schema.userCertifications)
+    .where(eq(schema.userCertifications.isActive, true))
+    .orderBy(schema.userCertifications.addedAt, schema.userCertifications.id);
+}
+
+// All attempts, grouped by certification slug: one query feeds every
+// dashboard card (attempts only exist for questions the user actually saw,
+// so the full table stays small in a single-user app).
+export async function getAttemptsByCertification() {
+  const { db, schema } = getDatabase();
+
+  const rows = await db.select().from(schema.questionAttempts);
+  const bySlug = new Map<string, typeof rows>();
+
+  for (const row of rows) {
+    const group = bySlug.get(row.certificationSlug);
+
+    if (group) {
+      group.push(row);
+    } else {
+      bySlug.set(row.certificationSlug, [row]);
+    }
+  }
+
+  return bySlug;
+}

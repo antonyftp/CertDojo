@@ -46,7 +46,7 @@ test("completing onboarding stores the profile and leads to the dashboard", asyn
 
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(
-    page.getByRole("heading", { name: "Welcome, Ada Lovelace" }),
+    page.getByRole("heading", { name: "Welcome back, Ada Lovelace" }),
   ).toBeVisible();
   await expect(
     page.getByText("AWS Certified Cloud Practitioner"),
@@ -59,4 +59,28 @@ test("onboarding is never shown again once completed", async ({ page }) => {
 
   await page.goto("/");
   await expect(page).toHaveURL(/\/dashboard$/);
+});
+
+// Step 4: tracking an extra certification from the dashboard, without
+// re-running onboarding.
+test("a certification can be added from the dashboard and appears immediately", async ({
+  page,
+}) => {
+  await page.goto("/dashboard");
+  await expect(page.getByText("1 certification tracked")).toBeVisible();
+
+  await page.getByRole("button", { name: "Track certification" }).click();
+  await page
+    .getByRole("checkbox", { name: /Kubernetes and Cloud Native Associate/ })
+    .click();
+  await page.getByRole("button", { name: "Start tracking" }).click();
+
+  await expect(page.getByText("2 certifications tracked")).toBeVisible();
+  await expect(
+    page.getByText("Kubernetes and Cloud Native Associate"),
+  ).toBeVisible();
+  // Both certifications now tracked: the dialog has nothing left to offer.
+  await expect(
+    page.getByRole("button", { name: "All certifications tracked" }),
+  ).toBeDisabled();
 });
