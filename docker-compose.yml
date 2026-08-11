@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    command: pnpm dev --hostname 0.0.0.0 --port 3000
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_PROVIDER: sqlite
+      DATABASE_FILE: /app/data/local.db
+    volumes:
+      - .:/app
+      - certprep-node-modules:/app/node_modules
+      - certprep-data:/app/data
+
+volumes:
+  certprep-node-modules:
+  certprep-data:
