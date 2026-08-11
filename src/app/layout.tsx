@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CertPrep",
-  description: "Minimal open-source certification prep starter built with Next.js 16.",
+  description:
+    "Minimal open-source certification prep starter built with Next.js 16.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

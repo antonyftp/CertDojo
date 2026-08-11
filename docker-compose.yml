@@ -4,8 +4,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_PROVIDER: sqlite
-      DATABASE_FILE: /app/data/local.db
+      SQLITE_PATH: /app/data/certprep.db
     volumes:
       - certprep-data:/app/data
 

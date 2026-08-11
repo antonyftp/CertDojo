@@ -37,16 +37,28 @@ Open http://localhost:3000.
 pnpm dev
 pnpm build
 pnpm lint
+pnpm format
 pnpm typecheck
 pnpm test
 pnpm test:e2e
-pnpm db:generate
+pnpm db:generate   # regenerate migrations for both dialects
+pnpm db:migrate    # apply migrations for the detected mode
+pnpm db:smoke-test # write/read one row per table in the detected mode
 ```
 
 ## Database modes
 
-- `DATABASE_PROVIDER=sqlite` uses `better-sqlite3` with `DATABASE_FILE`
-- `DATABASE_PROVIDER=postgres` uses `DATABASE_URL` for Postgres / Neon
+The mode is detected automatically — there is no toggle:
+
+- **Local mode** (default): no Postgres variable set → SQLite file at
+  `data/certprep.db` (override with `SQLITE_PATH`). All data stays on your
+  machine.
+- **Vercel mode**: `POSTGRES_URL` present (injected by the Vercel Postgres /
+  Neon integration; `DATABASE_URL` is accepted as an equivalent) → Postgres.
+
+Mode detection lives only in `src/db/client.ts`. To test the Postgres path
+locally, set `POSTGRES_URL` to a dev database (e.g. a free Neon instance) and
+run `pnpm db:migrate` followed by `pnpm db:smoke-test`.
 
 ## Docker
 
