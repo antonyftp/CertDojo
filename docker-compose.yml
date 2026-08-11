@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_PROVIDER: sqlite
+      DATABASE_FILE: /app/data/local.db
+    volumes:
+      - certprep-data:/app/data
+
+volumes:
+  certprep-data:
