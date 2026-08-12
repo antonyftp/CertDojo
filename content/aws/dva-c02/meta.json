@@ -1,0 +1,22 @@
+{
+  "slug": "dva-c02",
+  "provider": "aws",
+  "name": "AWS Certified Developer - Associate",
+  "examCode": "DVA-C02",
+  "description": "Associate-level AWS certification validating the ability to develop, deploy, debug, and secure cloud applications using AWS services, tools, and best practices.",
+  "officialUrl": "https://aws.amazon.com/certification/certified-developer-associate/",
+  "domains": [
+    {
+      "id": "development-with-aws-services",
+      "name": "Development with AWS Services",
+      "weight": 32
+    },
+    { "id": "security", "name": "Security", "weight": 26 },
+    { "id": "deployment", "name": "Deployment", "weight": 24 },
+    {
+      "id": "troubleshooting-and-optimization",
+      "name": "Troubleshooting and Optimization",
+      "weight": 18
+    }
+  ]
+}

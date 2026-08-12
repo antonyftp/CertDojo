@@ -1,12 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-import awsQuestions from "../content/aws/clf-c02/questions.json";
-import kcnaQuestions from "../content/cncf/kcna/questions.json";
+import dvaQuestions from "../content/aws/dva-c02/questions.json";
 
 // The critical user journey (SPECIFICATIONS.md §7): onboarding → quiz →
 // dashboard. Runs against the throwaway SQLite database configured in
 // playwright.config.ts, recreated fresh on every run — each test continues
 // the story of the previous one, so tests must run serially in this file.
+//
+// Only one certification (aws/dva-c02) is currently in /content, so the
+// "track an additional certification from the dashboard" step from the
+// original journey is dropped until a second certification's content
+// exists — see git history for the previous version of this file.
 
 test.describe.configure({ mode: "serial" });
 
@@ -43,7 +47,7 @@ test("completing onboarding stores the profile and leads to the dashboard", asyn
   await page.getByLabel("Name").fill("Ada Lovelace");
   await page.getByLabel("Job title").fill("Cloud Engineer");
   await page
-    .getByRole("checkbox", { name: /AWS Certified Cloud Practitioner/ })
+    .getByRole("checkbox", { name: /AWS Certified Developer - Associate/ })
     .click();
   await page.getByRole("button", { name: "Start practicing" }).click();
 
@@ -52,7 +56,7 @@ test("completing onboarding stores the profile and leads to the dashboard", asyn
     page.getByRole("heading", { name: "Welcome back, Ada Lovelace" }),
   ).toBeVisible();
   await expect(
-    page.getByText("AWS Certified Cloud Practitioner"),
+    page.getByText("AWS Certified Developer - Associate"),
   ).toBeVisible();
 });
 
@@ -64,61 +68,51 @@ test("onboarding is never shown again once completed", async ({ page }) => {
   await expect(page).toHaveURL(/\/dashboard$/);
 });
 
-// Step 4: tracking an extra certification from the dashboard, without
-// re-running onboarding.
-test("a certification can be added from the dashboard and appears immediately", async ({
-  page,
-}) => {
-  await page.goto("/dashboard");
-  await expect(page.getByText("1 certification tracked")).toBeVisible();
-
-  await page.getByRole("button", { name: "Track certification" }).click();
-  await page
-    .getByRole("checkbox", { name: /Kubernetes and Cloud Native Associate/ })
-    .click();
-  await page.getByRole("button", { name: "Start tracking" }).click();
-
-  await expect(page.getByText("2 certifications tracked")).toBeVisible();
-  await expect(
-    page.getByText("Kubernetes and Cloud Native Associate"),
-  ).toBeVisible();
-  // Both certifications now tracked: the dialog has nothing left to offer.
-  await expect(
-    page.getByRole("button", { name: "All certifications tracked" }),
-  ).toBeDisabled();
-});
-
 // Step 5/10: the quiz leg of the critical flow. The spec imports the real
-// question bank, so it can answer every question correctly and assert the
-// exact progress the dashboard must show afterward. Answer inputs are
-// visually-hidden radios/checkboxes, so options are clicked via their label
-// text (verified unique within the KCNA bank).
+// question bank so it can look up whichever question the app actually
+// shows and answer it correctly, then assert the exact progress the
+// dashboard must show afterward. The bank (449 questions) is far too large
+// to walk in full inside a browser test, so the session uses the app's
+// real "20 random" batch option rather than "All questions" — this also
+// means question order isn't known ahead of time, so each question is
+// looked up by its rendered text instead of by index. Answer inputs are
+// visually-hidden radios/checkboxes, so options are clicked via their
+// label text.
 test("a full practice session is graded and reflected on the dashboard", async ({
   page,
 }) => {
   test.setTimeout(180_000);
 
+  const SESSION_SIZE = 20;
+
   await page.goto("/dashboard");
 
-  const kcnaCard = page
+  const dvaCard = page
     .locator('[data-slot="card"]')
-    .filter({ hasText: "Kubernetes and Cloud Native Associate" });
+    .filter({ hasText: "AWS Certified Developer - Associate" });
 
-  await kcnaCard.getByRole("link", { name: "Practice" }).click();
-  await expect(page).toHaveURL(/\/certifications\/kcna\/quiz$/);
+  await dvaCard.getByRole("link", { name: "Practice" }).click();
+  await expect(page).toHaveURL(/\/certifications\/dva-c02\/quiz$/);
 
-  // "Not yet mastered" is preselected on a fresh profile; picking "All
-  // questions" makes the session order deterministic (bank order).
-  await page.getByText("All questions", { exact: true }).click();
+  // On a fresh profile every question counts as "not yet mastered", so that
+  // option is preselected by default — pick the random 20-question batch
+  // explicitly instead.
+  await page.getByText(`${SESSION_SIZE} random`, { exact: true }).click();
   await page.getByRole("button", { name: "Start session" }).click();
 
-  for (const [index, question] of kcnaQuestions.entries()) {
+  for (let index = 0; index < SESSION_SIZE; index++) {
     await expect(
-      page.getByText(`Question ${index + 1}/${kcnaQuestions.length}`),
+      page.getByText(`Question ${index + 1}/${SESSION_SIZE}`),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: question.question }),
-    ).toBeVisible();
+
+    const questionText = await page
+      .getByRole("heading", { level: 2 })
+      .textContent();
+    const question = dvaQuestions.find((q) => q.question === questionText);
+
+    if (!question) {
+      throw new Error(`Rendered question not found in the bank: ${questionText}`);
+    }
 
     for (const correctId of question.correctOptionIds) {
       const option = question.options.find(
@@ -134,16 +128,14 @@ test("a full practice session is graded and reflected on the dashboard", async (
     await page
       .getByRole("button", {
         name:
-          index + 1 === kcnaQuestions.length
-            ? "View session report"
-            : "Next question",
+          index + 1 === SESSION_SIZE ? "View session report" : "Next question",
       })
       .click();
   }
 
   // Session report: all answers correct.
   await expect(
-    page.getByText(`${kcnaQuestions.length}/${kcnaQuestions.length}`),
+    page.getByText(`${SESSION_SIZE}/${SESSION_SIZE}`),
   ).toBeVisible();
   await expect(page.getByText("100%")).toBeVisible();
   await expect(page.getByText("Exam-ready pace")).toBeVisible();
@@ -151,20 +143,11 @@ test("a full practice session is graded and reflected on the dashboard", async (
   await page.getByRole("link", { name: "Back to dashboard" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
 
-  // The dashboard reflects the persisted attempts immediately.
+  // The dashboard reflects the persisted attempts immediately. 20 correct
+  // out of the full 449-question bank is nowhere near the mastery
+  // threshold, so the status stays "In progress" rather than "Exam ready".
   await expect(
-    kcnaCard.getByText(
-      `${kcnaQuestions.length}/${kcnaQuestions.length} correct`,
-    ),
+    dvaCard.getByText(`${SESSION_SIZE}/${dvaQuestions.length} correct`),
   ).toBeVisible();
-  await expect(kcnaCard.getByText("Exam ready", { exact: true })).toBeVisible();
-
-  // The other tracked certification is untouched.
-  const awsCard = page
-    .locator('[data-slot="card"]')
-    .filter({ hasText: "AWS Certified Cloud Practitioner" });
-
-  await expect(
-    awsCard.getByText(`0/${awsQuestions.length} correct`),
-  ).toBeVisible();
+  await expect(dvaCard.getByText("In progress", { exact: true })).toBeVisible();
 });

@@ -18,7 +18,7 @@ import { getQuestions } from "@/lib/content/loader";
 // here cannot leak into other tests.
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "certdojo-vitest-"));
 
-const CERT_SLUG = "kcna";
+const CERT_SLUG = "dva-c02";
 const questions = getQuestions(CERT_SLUG);
 const singleAnswer = questions.find((question) => !question.multipleAnswers)!;
 const wrongOptionId = singleAnswer.options.find(
