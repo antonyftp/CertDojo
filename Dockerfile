@@ -1,7 +1,6 @@
-# CertPrep — production image for Local mode (SQLite).
-# Build context is the repository root:
-#   docker build -f docker/Dockerfile .
-# or, preferably, via docker/docker-compose.yml (context: ..).
+# CertDojo — production image for Local mode (SQLite).
+# Build from the repository root: `docker build .` or, preferably,
+# via docker-compose.yml (`docker compose up -d --build`).
 
 FROM node:24-bookworm-slim AS base
 ENV PNPM_HOME="/pnpm"
@@ -30,7 +29,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
-ENV SQLITE_PATH=/app/data/certprep.db
+ENV SQLITE_PATH=/app/data/certdojo.db
 
 # Standalone server + traced node_modules.
 COPY --from=builder --chown=node:node /app/.next/standalone ./

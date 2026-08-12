@@ -3,8 +3,7 @@ name: certdojo
 services:
   app:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
     ports:
       - "3000:3000"
     restart: unless-stopped

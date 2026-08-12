@@ -29,17 +29,31 @@ plugin (included in Docker Desktop).
 
 ```bash
 git clone https://github.com/antonyftp/CertDojo.git
-cd CertDojo/docker
+cd CertDojo
 docker compose up -d --build
 ```
 
 Open <http://localhost:3000>. Database migrations are applied automatically
-on startup, and your progress lives in the `certdojo-data` named volume, so
-it survives restarts, rebuilds, and `docker compose down`. To update:
-`git pull && docker compose up -d --build`. To wipe all data:
-`docker compose down -v`.
+on first start — no extra setup step. Your progress lives in the
+`certdojo-data` named volume, so it survives restarts, rebuilds, and
+`docker compose down`.
 
-More detail (ports, lifecycle commands) in [docker/README.md](docker/README.md).
+Day-to-day commands:
+
+```bash
+docker compose stop      # stop, keep everything
+docker compose start     # start again
+docker compose down      # remove the container — your data is kept
+docker compose up -d     # recreate; progress is still there
+
+git pull && docker compose up -d --build   # update to a new version
+                                           # (new migrations apply on startup)
+
+docker compose down -v   # reset: permanently deletes profile and progress
+```
+
+To serve on another port, edit `ports` in `docker-compose.yml`
+(e.g. `"8080:3000"` for <http://localhost:8080>).
 
 ## Run it locally without Docker
 
