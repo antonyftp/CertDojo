@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import {
@@ -56,6 +57,13 @@ export default async function OnboardingPage() {
         </p>
       </header>
       <OnboardingForm providerGroups={getProviderGroups()} />
+      <p className="text-muted-foreground text-sm">
+        Moving from another machine?{" "}
+        <Link href="/settings" className="text-primary hover:underline">
+          Import your exported data
+        </Link>{" "}
+        instead.
+      </p>
     </main>
   );
 }

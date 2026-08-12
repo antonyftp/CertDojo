@@ -12,10 +12,6 @@ export type AddCertificationsState = {
   message?: string;
 };
 
-export const initialAddCertificationsState: AddCertificationsState = {
-  status: "idle",
-};
-
 const addCertificationsSchema = z.object({
   certificationSlugs: z
     .array(z.string().min(1))

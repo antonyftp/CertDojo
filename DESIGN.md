@@ -302,3 +302,92 @@ progress dots, celebratory end screen. What differs here and why:
    the dashboard cards — the quiz and dashboard speak one language.
 4. Blue/green/gold contract holds: session progress is blue (navigation),
    correctness is green/red (earned), the ≥80% band is the only gold.
+
+---
+
+## Step 7 amendment — settings (data export / import)
+
+The settings route (`/settings`) is the **candidate records office**: the desk
+at the test center where you request your transcript or hand over records
+transferred from another program. Export is *requesting your transcript* (one
+official file containing your profile and complete attempt history); import is
+*transferring your records in* (the office validates the file before anything
+is written). Palette, type roles, and the blue-is-interactive contract are
+unchanged.
+
+Unlike every other screen, `/settings` is reachable **before onboarding**:
+its primary real-world use case is restoring a backup onto a fresh instance
+(new machine, Local → Vercel migration), where no profile exists yet. The
+onboarding page links to it quietly ("Moving from another machine?"), and on a
+fresh instance the page simply shows the import section without the profile
+card.
+
+### Layout
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ CERTPREP///                                        ← Dashboard │
+├────────────────────────────────────────────────────────────────┤
+│ SETTINGS                                          (mono kicker)│
+│ Your data                                                      │
+│                                                                │
+│ ┌ CANDIDATE ────────────────────────────────────────────────┐  │
+│ │ Ada Lovelace · Cloud Engineer                             │  │
+│ │ ON RECORD SINCE 2026-08-12          (mono, muted)         │  │
+│ └───────────────────────────────────────────────────────────┘  │
+│ ┌ EXPORT ───────────────────────────────────────────────────┐  │
+│ │ Download everything CertPrep stores about you — profile,  │  │
+│ │ tracked certifications, question attempts — as one JSON   │  │
+│ │ file.                                                     │  │
+│ │                                        [Export my data ↓] │  │
+│ └───────────────────────────────────────────────────────────┘  │
+│ ┌ IMPORT ───────────────────────────────────────────────────┐  │
+│ │ Restore a previously exported file. The file is validated │  │
+│ │ first; matching records are overwritten, nothing is       │  │
+│ │ duplicated.                                               │  │
+│ │ [ choose file… ]                          [Import file ↑] │  │
+│ │ ✓ RECORDS RESTORED — 1 profile · 2 certs · 57 attempts    │  │
+│ └───────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Decisions:
+
+- **Three ruled cards, one column** (`max-w-xl` like onboarding — this is a
+  form screen, not a data screen): candidate summary (read-only — the spec has
+  no profile editing in V1), export, import. Mono kickers name each card in
+  records-office vocabulary (`CANDIDATE`, `EXPORT`, `IMPORT`).
+- **Export is a plain download link** styled as the primary button (scantron
+  blue — it is interactive, not earned): a real `<a href>` to a route that
+  serves the file with a dated filename (`certprep-backup-YYYY-MM-DD.json`).
+  Works with JavaScript disabled; no spinner theater for a sub-second file.
+- **Import feedback is inline mono, never a toast**, matching the quiz's
+  grading language: a `✓ RECORDS RESTORED` line with imported counts on
+  success, a flag-red `✕` line with the precise validation error on failure.
+  The color contract bends one deliberate notch: the ✓ line uses `verified`
+  green because a restored record *is* earned history returning home — it is
+  the same data the green mastery bars are built from.
+- **No "danger zone"**: import overwrites matching rows, so the import card
+  says exactly that in its body copy instead of dressing the section in red
+  borders. Red remains reserved for actual errors.
+
+### Critique (per §6.2)
+
+*Default answer for a settings page*: a sidebar or tab bar of categories
+(Account / Appearance / Data / About), toggle switches, a red danger zone,
+toast notifications. What differs and why:
+
+1. **No tabs, no sidebar**: V1 settings holds exactly one concern — your
+   data. One column of three ruled cards; navigation chrome for a single
+   section would be scaffolding pretending to be product.
+2. **Records-office framing instead of "backup/restore" dev vocabulary**:
+   kickers and copy speak the exam-artifact language the rest of the app
+   established (candidate, records, transcript), so the page reads as part of
+   CertPrep rather than a generic admin panel.
+3. **Inline mono status lines instead of toasts** — consistent with the
+   answer-sheet grading pattern; the result stays on the page, attached to
+   the thing it describes.
+4. **Pre-onboarding reachability is a product decision, not a leak**: the
+   records office is precisely where a transferring candidate goes first.
+   Checked against the three banned defaults: still no cream/serif/
+   terracotta, no acid-on-black, no broadsheet hairlines.

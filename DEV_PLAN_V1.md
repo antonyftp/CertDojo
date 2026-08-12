@@ -23,7 +23,7 @@
 - [x] Step 4 — Dashboard + progress calculation
 - [x] Step 5 — Quiz engine
 - [x] Step 6 — Certification detail view (by domain)
-- [ ] Step 7 — User data export / import
+- [x] Step 7 — User data export / import
 - [ ] Step 8 — Dockerization (turnkey Local mode)
 - [ ] Step 9 — Vercel deployment readiness
 - [ ] Step 10 — Tests, final documentation, open source governance
@@ -223,7 +223,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 7 — User data export / import `[ ]`
+## Step 7 — User data export / import `[x]`
 
 **Goal**: let the user manually back up / transport their data.
 

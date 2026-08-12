@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   AddCertificationDialog,
   type ProviderGroup,
@@ -74,7 +76,15 @@ export default async function DashboardPage() {
           <span className="font-mono text-sm font-semibold tracking-widest">
             CERTPREP<span className="text-primary">{"///"}</span>
           </span>
-          <AddCertificationDialog providerGroups={availableGroups} />
+          <div className="flex items-center gap-4">
+            <Link
+              href="/settings"
+              className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-widest uppercase"
+            >
+              Settings
+            </Link>
+            <AddCertificationDialog providerGroups={availableGroups} />
+          </div>
         </div>
       </header>
       <main className="mx-auto grid w-full max-w-5xl gap-8 px-6 py-10">

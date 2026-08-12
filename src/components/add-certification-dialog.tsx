@@ -5,7 +5,7 @@ import { PlusIcon } from "lucide-react";
 
 import {
   addCertifications,
-  initialAddCertificationsState,
+  type AddCertificationsState,
 } from "@/app/(app)/dashboard/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,6 +19,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+
+const initialAddCertificationsState: AddCertificationsState = {
+  status: "idle",
+};
 
 export type CertificationChoice = {
   slug: string;
