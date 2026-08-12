@@ -23,7 +23,7 @@ CertDojo is an open-source, single-user (zero auth) Next.js 16 App Router app fo
 pnpm dev                # dev server on :3000
 pnpm build
 pnpm lint               # eslint .
-pnpm typecheck          # tsc --noEmit
+pnpm typecheck          # next typegen && tsc --noEmit (typegen generates PageProps/LayoutProps)
 pnpm format             # prettier --write . (format:check for CI-style check)
 pnpm test               # vitest run (all unit tests)
 pnpm vitest run src/lib/progress/progress.test.ts       # single unit test file
