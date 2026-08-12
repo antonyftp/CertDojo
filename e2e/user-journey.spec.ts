@@ -111,7 +111,9 @@ test("a full practice session is graded and reflected on the dashboard", async (
     const question = dvaQuestions.find((q) => q.question === questionText);
 
     if (!question) {
-      throw new Error(`Rendered question not found in the bank: ${questionText}`);
+      throw new Error(
+        `Rendered question not found in the bank: ${questionText}`,
+      );
     }
 
     for (const correctId of question.correctOptionIds) {
@@ -134,9 +136,7 @@ test("a full practice session is graded and reflected on the dashboard", async (
   }
 
   // Session report: all answers correct.
-  await expect(
-    page.getByText(`${SESSION_SIZE}/${SESSION_SIZE}`),
-  ).toBeVisible();
+  await expect(page.getByText(`${SESSION_SIZE}/${SESSION_SIZE}`)).toBeVisible();
   await expect(page.getByText("100%")).toBeVisible();
   await expect(page.getByText("Exam-ready pace")).toBeVisible();
 
