@@ -1,8 +1,8 @@
-# CertPrep — Specifications (V1)
+# CertDojo — Specifications (V1)
 
 ## 1. Vision
 
-CertPrep is an **open source** web platform for practicing tech certification MCQs (AWS, HashiCorp, Google Cloud, Microsoft, etc.). It's a **single-user** tool, with no account or authentication system, designed to run in two **mutually exclusive** ways:
+CertDojo is an **open source** web platform for practicing tech certification MCQs (AWS, HashiCorp, Google Cloud, Microsoft, etc.). It's a **single-user** tool, with no account or authentication system, designed to run in two **mutually exclusive** ways:
 
 - **Local Mode**: the user runs the application on their own machine (via Docker or `pnpm dev`), and all their data stays on their machine.
 - **Vercel Mode**: the user deploys the application on their own Vercel account, with a Postgres database attached.
@@ -46,7 +46,7 @@ The mode is **not a toggle in the UI**: it's determined automatically by how the
 ### 4.1 Runtime mode detection
 
 - If the `POSTGRES_URL` environment variable (or equivalent Vercel Postgres variable) is present → Postgres adapter.
-- Otherwise → SQLite adapter, default file: `data/certprep.db` (path configurable via `SQLITE_PATH`).
+- Otherwise → SQLite adapter, default file: `data/certdojo.db` (path configurable via `SQLITE_PATH`).
 - This detection happens in a single entry point (`db/client.ts`), never duplicated elsewhere in the code.
 
 ### 4.2 Data layer — Drizzle schema (single definition, two dialects)
@@ -227,17 +227,17 @@ No points, levels, or streaks system: only percentages and counters derived from
 Before building any UI (starting at Step 4 of the dev plan, and applied consistently for every screen after), produce a short design plan and have it critiqued before writing component code. This applies to every screen built afterward, not just the first one.
 
 **Design plan, required before implementation:**
-- **Palette**: 4–6 named hex values, each justified by CertPrep's actual subject matter (certification exams, technical study, mastery tracking) — not a generic "clean dashboard" palette.
+- **Palette**: 4–6 named hex values, each justified by CertDojo's actual subject matter (certification exams, technical study, mastery tracking) — not a generic "clean dashboard" palette.
 - **Typography**: two typefaces with clear, distinct roles (a display face used with restraint, a body face optimized for long-form question text), chosen deliberately rather than reached for by default.
 - **Layout concept**: a short prose description plus a rough ASCII wireframe of the key screens (dashboard, quiz).
-- **Signature element**: the one specific, memorable visual element CertPrep will be recognized by (e.g. a distinctive way of visualizing per-domain mastery, a distinctive question-card treatment) — everything else stays quiet and disciplined around it.
+- **Signature element**: the one specific, memorable visual element CertDojo will be recognized by (e.g. a distinctive way of visualizing per-domain mastery, a distinctive question-card treatment) — everything else stays quiet and disciplined around it.
 
-**Explicitly avoid these generic AI-design defaults** unless a specific reason ties them to CertPrep:
+**Explicitly avoid these generic AI-design defaults** unless a specific reason ties them to CertDojo:
 1. Warm cream background + high-contrast serif headline + terracotta/clay accent.
 2. Near-black background with a single bright acid-green or vermilion accent.
 3. Broadsheet/editorial layout — hairline rules, zero border-radius, dense newspaper-style columns.
 
-**Critique step**: before implementing, check the design plan against the question "is this the default answer I'd produce for any similar dashboard app?" Revise anything that reads as generic rather than specific to CertPrep, and note what was changed and why. Only implement after this critique.
+**Critique step**: before implementing, check the design plan against the question "is this the default answer I'd produce for any similar dashboard app?" Revise anything that reads as generic rather than specific to CertDojo, and note what was changed and why. Only implement after this critique.
 
 **Ground the identity in the real subject**: mine visual language from the domain itself — exam interfaces (timers, answer sheets, score reports), certification badge/credential aesthetics, or the specific visual vocabulary of providers like AWS/HashiCorp — rather than generic SaaS dashboard conventions.
 

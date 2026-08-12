@@ -22,7 +22,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const meta = getCertificationBySlug(slug);
 
-  return { title: meta ? `${meta.examCode} — CertPrep` : "CertPrep" };
+  return { title: meta ? `${meta.examCode} — CertDojo` : "CertDojo" };
 }
 
 // Certification detail view (DEV_PLAN_V1.md Step 6): the full score report
@@ -52,7 +52,7 @@ export default async function CertificationDetailPage({
             href="/dashboard"
             className="font-mono text-sm font-semibold tracking-widest"
           >
-            CERTPREP<span className="text-primary">{"///"}</span>
+            CERTDOJO<span className="text-primary">{"///"}</span>
           </Link>
           <Link
             href="/dashboard"

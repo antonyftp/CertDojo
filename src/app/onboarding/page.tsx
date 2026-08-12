@@ -46,13 +46,13 @@ export default async function OnboardingPage() {
     <main className="mx-auto grid w-full max-w-xl gap-8 px-6 py-16">
       <header className="grid gap-2">
         <p className="text-muted-foreground text-sm font-medium tracking-[0.3em] uppercase">
-          CertPrep
+          CertDojo
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">
           Set up your practice space
         </h1>
         <p className="text-muted-foreground text-base leading-7">
-          Tell CertPrep who you are and which certifications you are preparing
+          Tell CertDojo who you are and which certifications you are preparing
           for. Everything stays on this instance.
         </p>
       </header>

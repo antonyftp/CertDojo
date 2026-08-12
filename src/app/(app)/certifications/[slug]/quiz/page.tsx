@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const meta = getCertificationBySlug(slug);
 
-  return { title: meta ? `${meta.examCode} practice — CertPrep` : "CertPrep" };
+  return { title: meta ? `${meta.examCode} practice — CertDojo` : "CertDojo" };
 }
 
 export default async function QuizPage({

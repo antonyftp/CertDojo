@@ -164,7 +164,7 @@ export function QuizSession({
             href="/dashboard"
             className="font-mono text-sm font-semibold tracking-widest"
           >
-            CERTPREP<span className="text-primary">{"///"}</span>
+            CERTDOJO<span className="text-primary">{"///"}</span>
           </Link>
           {phase === "active" && currentQuestion ? (
             <span className="text-muted-foreground truncate font-mono text-xs tracking-wider uppercase">

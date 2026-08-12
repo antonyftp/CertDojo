@@ -8,6 +8,6 @@ export default defineConfig({
     url:
       process.env.POSTGRES_URL ??
       process.env.DATABASE_URL ??
-      "postgres://localhost:5432/certprep",
+      "postgres://localhost:5432/certdojo",
   },
 });

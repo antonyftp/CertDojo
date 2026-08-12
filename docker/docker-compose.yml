@@ -1,4 +1,4 @@
-name: certprep
+name: certdojo
 
 services:
   app:
@@ -9,11 +9,11 @@ services:
       - "3000:3000"
     restart: unless-stopped
     environment:
-      SQLITE_PATH: /app/data/certprep.db
+      SQLITE_PATH: /app/data/certdojo.db
     volumes:
       # Named volume so the SQLite database survives container restarts,
       # rebuilds, and `docker compose down` (removed only with `down -v`).
-      - certprep-data:/app/data
+      - certdojo-data:/app/data
 
 volumes:
-  certprep-data:
+  certdojo-data:

@@ -15,7 +15,7 @@ export type ImportState =
     };
 
 // A backup is a handful of small tables; anything bigger than this is not a
-// CertPrep export.
+// CertDojo export.
 const MAX_IMPORT_BYTES = 10 * 1024 * 1024;
 
 // Import half of SPECIFICATIONS.md §5.5: the whole file is validated before
@@ -33,7 +33,7 @@ export async function importUserData(
   if (file.size > MAX_IMPORT_BYTES) {
     return {
       status: "error",
-      message: "This file is too large to be a CertPrep backup.",
+      message: "This file is too large to be a CertDojo backup.",
     };
   }
 
@@ -56,7 +56,7 @@ export async function importUserData(
 
     return {
       status: "error",
-      message: `This file is not a valid CertPrep backup: ${issue.message}${where}. Nothing was imported.`,
+      message: `This file is not a valid CertDojo backup: ${issue.message}${where}. Nothing was imported.`,
     };
   }
 

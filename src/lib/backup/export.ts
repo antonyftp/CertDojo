@@ -26,7 +26,7 @@ export async function buildBackupFile(): Promise<SerializedBackupFile | null> {
   ]);
 
   return {
-    app: "certprep",
+    app: "certdojo",
     formatVersion: BACKUP_FORMAT_VERSION,
     exportedAt: new Date().toISOString(),
     userProfile: {

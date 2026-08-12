@@ -1,6 +1,6 @@
-# CertPrep
+# CertDojo
 
-CertPrep is an open-source Next.js 16 App Router starter for certification study plans. It includes React 19, TypeScript, Tailwind CSS 4, shadcn/ui-compatible components, Zustand state, Drizzle ORM, Zod validation, Vitest, Playwright, Docker packaging, and pnpm.
+CertDojo is an open-source Next.js 16 App Router starter for certification study plans. It includes React 19, TypeScript, Tailwind CSS 4, shadcn/ui-compatible components, Zustand state, Drizzle ORM, Zod validation, Vitest, Playwright, Docker packaging, and pnpm.
 
 ## Stack
 
@@ -51,7 +51,7 @@ pnpm db:smoke-test # write/read one row per table in the detected mode
 The mode is detected automatically — there is no toggle:
 
 - **Local mode** (default): no Postgres variable set → SQLite file at
-  `data/certprep.db` (override with `SQLITE_PATH`). All data stays on your
+  `data/certdojo.db` (override with `SQLITE_PATH`). All data stays on your
   machine.
 - **Vercel mode**: `POSTGRES_URL` present (injected by the Vercel Postgres /
   Neon integration; `DATABASE_URL` is accepted as an equivalent) → Postgres.

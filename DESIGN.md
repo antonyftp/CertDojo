@@ -1,4 +1,4 @@
-# CertPrep — Design plan (SPECIFICATIONS.md §6.2)
+# CertDojo — Design plan (SPECIFICATIONS.md §6.2)
 
 Written before Step 4 UI implementation; applies to every screen after it
 (quiz, certification detail, settings). Any new screen must follow this plan
@@ -6,7 +6,7 @@ or amend it here first.
 
 ## Concept
 
-CertPrep's identity is mined from the artifacts of certification life, not
+CertDojo's identity is mined from the artifacts of certification life, not
 from SaaS dashboard conventions: the **OMR answer sheet** (the scantron bubble
 form filled in with a No. 2 pencil), the **score report** handed out at the
 test center (PASS/FAIL bands, domain-by-domain breakdown), and the **exam
@@ -48,7 +48,7 @@ context) so the two voices contrast in role but never clash.
 
 ## Layout concept
 
-Quiet, single-column, productivity-first. A slim top bar carries the CertPrep
+Quiet, single-column, productivity-first. A slim top bar carries the CertDojo
 wordmark (mono) and context actions; content sits in a centered `max-w-5xl`
 column. Cards are the only elevated surface; everything else sits flat on the
 sheet background. Density is moderate — closer to a revision tool than a
@@ -58,7 +58,7 @@ marketing site (spec §6.1).
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ CERTPREP///                          [+ Track certification]   │  top bar
+│ CERTDOJO///                          [+ Track certification]   │  top bar
 ├────────────────────────────────────────────────────────────────┤
 │ Welcome back, Ada — Cloud Engineer                             │
 │ 2 CERTIFICATIONS TRACKED                                       │  mono kicker
@@ -82,7 +82,7 @@ marketing site (spec §6.1).
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ CERTPREP///          CLF-C02 · QUESTION 4/10 · SECURITY        │
+│ CERTDOJO///          CLF-C02 · QUESTION 4/10 · SECURITY        │
 │ ████████░░░░░░░░░░░░  (session progress, scantron blue)        │
 ├────────────────────────────────────────────────────────────────┤
 │ Which AWS service is used to manage identities and access?     │
@@ -149,7 +149,7 @@ sheet**, and the end screen is the **score report**.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ CERTPREP///                                 ← Back to dashboard│
+│ CERTDOJO///                                 ← Back to dashboard│
 ├────────────────────────────────────────────────────────────────┤
 │ AWS · CLF-C02                                     (mono kicker)│
 │ Practice session                                               │
@@ -205,7 +205,7 @@ quiet neutral `KEEP PRACTICING` otherwise — reusing the dashboard's
 threshold, not inventing a new scale), then two actions. No confetti, no
 streaks (spec §2.5).
 
-**Deliberately omitted**: a per-question timer. CertPrep is a revision tool,
+**Deliberately omitted**: a per-question timer. CertDojo is a revision tool,
 not an exam simulator; a countdown would add anxiety without adding signal.
 
 ---
@@ -223,7 +223,7 @@ unchanged.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ CERTPREP///                                        ← Dashboard │
+│ CERTDOJO///                                        ← Dashboard │
 ├────────────────────────────────────────────────────────────────┤
 │ AWS · CLF-C02                                    [IN PROGRESS] │
 │ AWS Certified Cloud Practitioner                               │
@@ -326,7 +326,7 @@ card.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ CERTPREP///                                        ← Dashboard │
+│ CERTDOJO///                                        ← Dashboard │
 ├────────────────────────────────────────────────────────────────┤
 │ SETTINGS                                          (mono kicker)│
 │ Your data                                                      │
@@ -336,7 +336,7 @@ card.
 │ │ ON RECORD SINCE 2026-08-12          (mono, muted)         │  │
 │ └───────────────────────────────────────────────────────────┘  │
 │ ┌ EXPORT ───────────────────────────────────────────────────┐  │
-│ │ Download everything CertPrep stores about you — profile,  │  │
+│ │ Download everything CertDojo stores about you — profile,  │  │
 │ │ tracked certifications, question attempts — as one JSON   │  │
 │ │ file.                                                     │  │
 │ │                                        [Export my data ↓] │  │
@@ -359,7 +359,7 @@ Decisions:
   records-office vocabulary (`CANDIDATE`, `EXPORT`, `IMPORT`).
 - **Export is a plain download link** styled as the primary button (scantron
   blue — it is interactive, not earned): a real `<a href>` to a route that
-  serves the file with a dated filename (`certprep-backup-YYYY-MM-DD.json`).
+  serves the file with a dated filename (`certdojo-backup-YYYY-MM-DD.json`).
   Works with JavaScript disabled; no spinner theater for a sub-second file.
 - **Import feedback is inline mono, never a toast**, matching the quiz's
   grading language: a `✓ RECORDS RESTORED` line with imported counts on
@@ -383,7 +383,7 @@ toast notifications. What differs and why:
 2. **Records-office framing instead of "backup/restore" dev vocabulary**:
    kickers and copy speak the exam-artifact language the rest of the app
    established (candidate, records, transcript), so the page reads as part of
-   CertPrep rather than a generic admin panel.
+   CertDojo rather than a generic admin panel.
 3. **Inline mono status lines instead of toasts** — consistent with the
    answer-sheet grading pattern; the result stays on the page, attached to
    the thing it describes.

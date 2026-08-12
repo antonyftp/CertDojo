@@ -17,7 +17,7 @@ import { sqliteSchema } from "@/db/schema-sqlite";
 // Single entry point for runtime mode detection (SPECIFICATIONS.md §4.1):
 // - POSTGRES_URL present (or DATABASE_URL, its Vercel/Neon equivalent)
 //   → Postgres adapter.
-// - Otherwise → SQLite file, data/certprep.db by default (SQLITE_PATH to
+// - Otherwise → SQLite file, data/certdojo.db by default (SQLITE_PATH to
 //   override).
 // No other module may inspect these variables or reference a dialect.
 
@@ -36,7 +36,7 @@ export function getRuntimeMode(): RuntimeMode {
 }
 
 export function getSqlitePath(): string {
-  return process.env.SQLITE_PATH ?? "data/certprep.db";
+  return process.env.SQLITE_PATH ?? "data/certdojo.db";
 }
 
 function createDatabase(): { db: AppDatabase; schema: AppSchema } {
@@ -61,11 +61,11 @@ function createDatabase(): { db: AppDatabase; schema: AppSchema } {
 
 // Cached across module reloads in dev, one instance per process in prod.
 const globalCache = globalThis as unknown as {
-  __certprepDb?: ReturnType<typeof createDatabase>;
+  __certdojoDb?: ReturnType<typeof createDatabase>;
 };
 
 export function getDatabase(): { db: AppDatabase; schema: AppSchema } {
-  globalCache.__certprepDb ??= createDatabase();
+  globalCache.__certdojoDb ??= createDatabase();
 
-  return globalCache.__certprepDb;
+  return globalCache.__certdojoDb;
 }

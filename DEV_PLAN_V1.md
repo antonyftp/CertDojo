@@ -1,4 +1,4 @@
-# CertPrep — V1 Development Plan (step by step)
+# CertDojo — V1 Development Plan (step by step)
 
 ## General instructions for Claude Code
 
@@ -42,7 +42,7 @@ mostly during Step 1, which rewrites the data layer anyway.
 **Spec deviations — all fixed on 2026-08-12 (together with Step 1):**
 - **Mode detection** (spec §4.1) — fixed: `src/db/client.ts` now auto-detects from the
   presence of `POSTGRES_URL` (`DATABASE_URL` accepted as the Vercel/Neon equivalent);
-  the `DATABASE_PROVIDER` toggle is gone. SQLite defaults to `data/certprep.db`,
+  the `DATABASE_PROVIDER` toggle is gone. SQLite defaults to `data/certdojo.db`,
   overridable via `SQLITE_PATH`. Detection exists only in `client.ts`.
 - **Schema** (spec §4.2) — fixed: the placeholder `study_plans` table was replaced by
   the real `user_profile`, `user_certifications`, `question_attempts` tables. Two
@@ -241,7 +241,7 @@ features (the demo `study_plans` table is already gone).
 
 ## Step 8 — Dockerization (turnkey Local mode) `[x]`
 
-**Goal**: let a non-developer user run CertPrep locally without installing Node.
+**Goal**: let a non-developer user run CertDojo locally without installing Node.
 
 **Tasks**:
 - `docker/Dockerfile` (multi-stage build, production image).
@@ -295,4 +295,4 @@ features (the demo `study_plans` table is already gone).
 
 ## End of V1
 
-Once Step 10 is validated, CertPrep's V1 is considered complete against the specifications. Any feature not explicitly covered in the specifications should be treated as out of scope for V1 and left for a future V2 plan, to be written separately.
+Once Step 10 is validated, CertDojo's V1 is considered complete against the specifications. Any feature not explicitly covered in the specifications should be treated as out of scope for V1 and left for a future V2 plan, to be written separately.

@@ -1,6 +1,6 @@
-# Running CertPrep with Docker (Local mode)
+# Running CertDojo with Docker (Local mode)
 
-Run CertPrep on your own machine without installing Node.js. All data stays
+Run CertDojo on your own machine without installing Node.js. All data stays
 local, in a SQLite database stored in a Docker volume.
 
 _This is the minimal Docker documentation for now; it will be merged into the
@@ -30,7 +30,7 @@ docker compose down      # remove the container — your data is kept
 docker compose up -d     # recreate; progress is still there
 ```
 
-Your progress lives in the `certprep-data` named volume, so it survives
+Your progress lives in the `certdojo-data` named volume, so it survives
 restarts, rebuilds and `docker compose down`.
 
 ## Update to a new version

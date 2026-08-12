@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUserProfile } from "@/db/queries";
 
-export const metadata: Metadata = { title: "Settings — CertPrep" };
+export const metadata: Metadata = { title: "Settings — CertDojo" };
 
 // Settings is the "candidate records office" (DESIGN.md Step 7 amendment)
 // and is deliberately NOT inside the onboarding-gated (app) group: restoring
@@ -35,7 +35,7 @@ export default async function SettingsPage() {
             href="/dashboard"
             className="font-mono text-sm font-semibold tracking-widest"
           >
-            CERTPREP<span className="text-primary">{"///"}</span>
+            CERTDOJO<span className="text-primary">{"///"}</span>
           </Link>
           <Link
             href={onboarded ? "/dashboard" : "/onboarding"}
@@ -79,7 +79,7 @@ export default async function SettingsPage() {
             </CardHeader>
             <CardContent className="grid gap-4">
               <p className="text-muted-foreground text-sm leading-6">
-                Download everything CertPrep stores about you — profile,
+                Download everything CertDojo stores about you — profile,
                 tracked certifications, question attempts — as one JSON file.
                 Keep it as a backup or carry it to another instance.
               </p>
@@ -102,7 +102,7 @@ export default async function SettingsPage() {
           </CardHeader>
           <CardContent className="grid gap-4">
             <p className="text-muted-foreground text-sm leading-6">
-              Restore a previously exported CertPrep file
+              Restore a previously exported CertDojo file
               {onboarded
                 ? ". The file is validated before anything is written; matching records are overwritten, nothing is duplicated."
                 : " from another machine or instance. Importing completes setup — no need to fill in onboarding first."}

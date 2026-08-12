@@ -7,7 +7,7 @@ import {
 
 function validBackup(): SerializedBackupFile {
   return {
-    app: "certprep",
+    app: "certdojo",
     formatVersion: 1,
     exportedAt: "2026-08-12T10:00:00.000Z",
     userProfile: {

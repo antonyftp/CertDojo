@@ -74,7 +74,7 @@ export default async function DashboardPage() {
       <header className="bg-card border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
           <span className="font-mono text-sm font-semibold tracking-widest">
-            CERTPREP<span className="text-primary">{"///"}</span>
+            CERTDOJO<span className="text-primary">{"///"}</span>
           </span>
           <div className="flex items-center gap-4">
             <Link

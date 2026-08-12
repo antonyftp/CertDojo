@@ -43,7 +43,7 @@ export function OnboardingForm({
         <CardHeader>
           <CardTitle>About you</CardTitle>
           <CardDescription>
-            Asked once — CertPrep is a single-user tool with no account.
+            Asked once — CertDojo is a single-user tool with no account.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">

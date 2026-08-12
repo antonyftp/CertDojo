@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-CertPrep is an open-source, single-user (zero auth) Next.js 16 App Router app for practicing tech certification MCQs. Full requirements live in `SPECIFICATIONS.md`; work proceeds step by step through `DEV_PLAN_V1.md`.
+CertDojo is an open-source, single-user (zero auth) Next.js 16 App Router app for practicing tech certification MCQs. Full requirements live in `SPECIFICATIONS.md`; work proceeds step by step through `DEV_PLAN_V1.md`.
 
 ## Development workflow (mandatory)
 
@@ -43,7 +43,7 @@ Package manager is pnpm (via corepack). `db:migrate` / `db:smoke-test` run throu
 
 The app runs in one of two mutually exclusive modes, auto-detected — never a UI toggle:
 
-- **Local mode** (default): SQLite file at `data/certprep.db` (`SQLITE_PATH` overrides) via better-sqlite3.
+- **Local mode** (default): SQLite file at `data/certdojo.db` (`SQLITE_PATH` overrides) via better-sqlite3.
 - **Vercel mode**: `POSTGRES_URL` (or `DATABASE_URL`) present → Neon/Postgres.
 
 Detection lives **only** in `src/db/client.ts` (`getRuntimeMode()`, `getDatabase()`). No other module may inspect these env vars or reference a dialect. Business logic is typed against the SQLite schema (`AppDatabase`/`AppSchema`); the Postgres instance is cast to it.

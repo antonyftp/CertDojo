@@ -14,7 +14,7 @@ import "@fontsource/ibm-plex-mono/600.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CertPrep",
+  title: "CertDojo",
   description:
     "Open-source, single-user practice tool for tech certification MCQs.",
 };

@@ -20,7 +20,7 @@ export async function GET() {
   return new Response(JSON.stringify(backup, null, 2), {
     headers: {
       "Content-Type": "application/json",
-      "Content-Disposition": `attachment; filename="certprep-backup-${date}.json"`,
+      "Content-Disposition": `attachment; filename="certdojo-backup-${date}.json"`,
     },
   });
 }
