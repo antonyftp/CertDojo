@@ -1,0 +1,27 @@
+[
+  {
+    "id": "wb-0001",
+    "domainId": "assembly",
+    "question": "Which tool assembles a widget?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "A widget wrench" },
+      { "id": "b", "text": "A hammer" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Widgets are assembled with the widget wrench."
+  },
+  {
+    "id": "wb-0002",
+    "domainId": "safety",
+    "question": "Which TWO items are required safety gear?",
+    "multipleAnswers": true,
+    "options": [
+      { "id": "a", "text": "Goggles" },
+      { "id": "b", "text": "Sandals" },
+      { "id": "c", "text": "Gloves" }
+    ],
+    "correctOptionIds": ["a", "c"],
+    "explanation": "Goggles and gloves are mandatory on the widget floor."
+  }
+]

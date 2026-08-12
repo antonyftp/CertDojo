@@ -1,0 +1,12 @@
+{
+  "slug": "widget-basics",
+  "provider": "acme",
+  "name": "Widget Basics",
+  "examCode": "WB-100",
+  "description": "Entry-level widget certification used by loader unit tests.",
+  "officialUrl": "https://example.com/widget-basics",
+  "domains": [
+    { "id": "assembly", "name": "Widget Assembly", "weight": 60 },
+    { "id": "safety", "name": "Widget Safety", "weight": 40 }
+  ]
+}

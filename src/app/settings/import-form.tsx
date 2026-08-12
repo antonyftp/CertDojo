@@ -3,10 +3,7 @@
 import { useActionState } from "react";
 import { UploadIcon } from "lucide-react";
 
-import {
-  importUserData,
-  type ImportState,
-} from "@/app/settings/actions";
+import { importUserData, type ImportState } from "@/app/settings/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

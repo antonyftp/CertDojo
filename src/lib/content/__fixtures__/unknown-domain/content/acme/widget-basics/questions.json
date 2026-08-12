@@ -1,0 +1,14 @@
+[
+  {
+    "id": "wb-0001",
+    "domainId": "not-in-the-blueprint",
+    "question": "Which tool assembles a widget?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "A widget wrench" },
+      { "id": "b", "text": "A hammer" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "Widgets are assembled with the widget wrench."
+  }
+]

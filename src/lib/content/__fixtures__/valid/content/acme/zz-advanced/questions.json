@@ -1,0 +1,14 @@
+[
+  {
+    "id": "zz-0001",
+    "domainId": "core",
+    "question": "Is ZZ advanced?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "Yes" },
+      { "id": "b", "text": "No" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "It says so in the name."
+  }
+]

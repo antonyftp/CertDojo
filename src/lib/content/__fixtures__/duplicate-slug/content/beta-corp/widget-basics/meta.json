@@ -1,0 +1,9 @@
+{
+  "slug": "widget-basics",
+  "provider": "beta-corp",
+  "name": "Widget Basics (Beta Corp)",
+  "examCode": "BWB-100",
+  "description": "Second certification reusing an existing slug.",
+  "officialUrl": "https://example.com/beta-widget-basics",
+  "domains": [{ "id": "core", "name": "Core", "weight": 100 }]
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "api-basics",
+  "provider": "beta-corp",
+  "name": "API Basics",
+  "examCode": "API-101",
+  "description": "API certification used by loader unit tests.",
+  "officialUrl": "https://example.com/api-basics",
+  "domains": [{ "id": "rest", "name": "REST", "weight": 100 }]
+}

@@ -66,8 +66,7 @@ export default async function SettingsPage() {
                 </span>
               </p>
               <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-                On record since{" "}
-                {profile.createdAt.toISOString().slice(0, 10)}
+                On record since {profile.createdAt.toISOString().slice(0, 10)}
               </p>
             </CardContent>
           </Card>
@@ -79,9 +78,9 @@ export default async function SettingsPage() {
             </CardHeader>
             <CardContent className="grid gap-4">
               <p className="text-muted-foreground text-sm leading-6">
-                Download everything CertDojo stores about you — profile,
-                tracked certifications, question attempts — as one JSON file.
-                Keep it as a backup or carry it to another instance.
+                Download everything CertDojo stores about you — profile, tracked
+                certifications, question attempts — as one JSON file. Keep it as
+                a backup or carry it to another instance.
               </p>
               <div>
                 <Button asChild>

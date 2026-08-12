@@ -1,10 +1,9 @@
 # Running CertDojo with Docker (Local mode)
 
 Run CertDojo on your own machine without installing Node.js. All data stays
-local, in a SQLite database stored in a Docker volume.
-
-_This is the minimal Docker documentation for now; it will be merged into the
-main README._
+local, in a SQLite database stored in a Docker volume. (The quick version of
+this guide lives in the [main README](../README.md); this page is the full
+reference.)
 
 ## Requirements
 

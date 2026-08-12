@@ -1,0 +1,14 @@
+[
+  {
+    "id": "api-0001",
+    "domainId": "rest",
+    "question": "Which verb reads a resource?",
+    "multipleAnswers": false,
+    "options": [
+      { "id": "a", "text": "GET" },
+      { "id": "b", "text": "DELETE" }
+    ],
+    "correctOptionIds": ["a"],
+    "explanation": "GET is the read verb."
+  }
+]

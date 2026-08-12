@@ -1,0 +1,9 @@
+{
+  "slug": "some-other-slug",
+  "provider": "acme",
+  "name": "Widget Basics",
+  "examCode": "WB-100",
+  "description": "Meta whose slug does not match its directory.",
+  "officialUrl": "https://example.com/widget-basics",
+  "domains": [{ "id": "core", "name": "Core", "weight": 100 }]
+}

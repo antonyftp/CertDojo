@@ -26,10 +26,10 @@ pnpm lint               # eslint .
 pnpm typecheck          # tsc --noEmit
 pnpm format             # prettier --write . (format:check for CI-style check)
 pnpm test               # vitest run (all unit tests)
-pnpm vitest run src/components/study-planner.test.tsx   # single unit test file
+pnpm vitest run src/lib/progress/progress.test.ts       # single unit test file
 pnpm test:watch
 pnpm test:e2e           # playwright (spins up dev server via playwright.config.ts)
-pnpm test:e2e e2e/home.spec.ts                          # single e2e spec
+pnpm test:e2e e2e/user-journey.spec.ts                  # single e2e spec
 pnpm db:generate        # regenerate migrations for BOTH dialects
 pnpm db:migrate         # apply migrations for the detected mode
 pnpm db:smoke-test      # write/read one row per table in the detected mode
@@ -61,9 +61,9 @@ The schema is defined twice — `src/db/schema-sqlite.ts` and `src/db/schema-pos
 
 Application code lives under `src/` (`src/app`, `src/db`, `src/lib`, `src/components`) — an accepted divergence from the spec's root-level layout. `/content` and `/scripts` stay at the repo root. Path alias `@/*` → `src/*`. UI uses shadcn/ui on **Radix** primitives (spec requires Radix; don't let the shadcn CLI switch to Base UI — keep the existing `components.json`).
 
-### Temporary demo code
+### Tests
 
-`StudyPlanner` (+ test), `study-session-store.ts`, `lib/validation.ts`, the placeholder home page, and `e2e/home.spec.ts` are Step 0 scaffold demos, to be removed as real features land in Steps 3–5.
+Unit/integration tests run under Vitest (`server-only` is aliased to a stub in `vitest.config.mts`, so server modules import cleanly). The Playwright suite (`e2e/user-journey.spec.ts`) is one serial story — onboarding → quiz → dashboard — against a throwaway SQLite DB on port 3100 (see `playwright.config.ts`); new e2e tests belong in that file (a second parallel file would race on the shared database). CI is `.github/workflows/ci.yml`.
 
 ## Non-functional constraints
 

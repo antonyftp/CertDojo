@@ -25,8 +25,8 @@
 - [x] Step 6 — Certification detail view (by domain)
 - [x] Step 7 — User data export / import
 - [x] Step 8 — Dockerization (turnkey Local mode)
-- [ ] Step 9 — Vercel deployment readiness
-- [ ] Step 10 — Tests, final documentation, open source governance
+- [x] Step 9 — Vercel deployment readiness
+- [x] Step 10 — Tests, final documentation, open source governance
 
 ---
 
@@ -256,7 +256,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 9 — Vercel deployment readiness `[ ]`
+## Step 9 — Vercel deployment readiness `[x]`
 
 **Goal**: make sure Vercel mode actually works, not just in theory.
 
@@ -273,7 +273,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 10 — Tests, final documentation, open source governance `[ ]`
+## Step 10 — Tests, final documentation, open source governance `[x]`
 
 **Goal**: make the project presentable and usable by the community.
 

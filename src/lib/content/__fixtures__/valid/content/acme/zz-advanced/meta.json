@@ -1,0 +1,9 @@
+{
+  "slug": "zz-advanced",
+  "provider": "acme",
+  "name": "ZZ Advanced",
+  "examCode": "ZZ-900",
+  "description": "Advanced certification used by loader unit tests.",
+  "officialUrl": "https://example.com/zz-advanced",
+  "domains": [{ "id": "core", "name": "Core", "weight": 100 }]
+}
