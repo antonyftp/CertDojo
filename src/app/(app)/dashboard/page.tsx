@@ -4,6 +4,7 @@ import {
   AddCertificationDialog,
   type ProviderGroup,
 } from "@/components/add-certification-dialog";
+import { BrandLockup } from "@/components/brand";
 import {
   CertificationCard,
   MissingContentCard,
@@ -73,9 +74,7 @@ export default async function DashboardPage() {
     <div className="min-h-dvh">
       <header className="bg-card border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <span className="font-mono text-sm font-semibold tracking-widest">
-            CERTDOJO<span className="text-primary">{"///"}</span>
-          </span>
+          <BrandLockup />
           <div className="flex items-center gap-4">
             <Link
               href="/settings"

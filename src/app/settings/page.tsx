@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DownloadIcon } from "lucide-react";
 
 import { ImportForm } from "@/app/settings/import-form";
+import { BrandLockup } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUserProfile } from "@/db/queries";
@@ -31,11 +32,8 @@ export default async function SettingsPage() {
     <div className="min-h-dvh">
       <header className="bg-card border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="font-mono text-sm font-semibold tracking-widest"
-          >
-            CERTDOJO<span className="text-primary">{"///"}</span>
+          <Link href="/dashboard">
+            <BrandLockup />
           </Link>
           <Link
             href={onboarded ? "/dashboard" : "/onboarding"}

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 
 import { BlueprintStrip } from "@/components/blueprint-strip";
+import { BrandLockup } from "@/components/brand";
 import { statusChip } from "@/components/certification-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,11 +49,8 @@ export default async function CertificationDetailPage({
     <div className="min-h-dvh">
       <header className="bg-card border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="font-mono text-sm font-semibold tracking-widest"
-          >
-            CERTDOJO<span className="text-primary">{"///"}</span>
+          <Link href="/dashboard">
+            <BrandLockup />
           </Link>
           <Link
             href="/dashboard"

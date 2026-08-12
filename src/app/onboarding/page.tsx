@@ -5,6 +5,7 @@ import {
   OnboardingForm,
   type ProviderGroup,
 } from "@/app/onboarding/onboarding-form";
+import { BrandLockup } from "@/components/brand";
 import { getUserProfile } from "@/db/queries";
 import { getAllCertifications } from "@/lib/content/loader";
 
@@ -45,9 +46,7 @@ export default async function OnboardingPage() {
   return (
     <main className="mx-auto grid w-full max-w-xl gap-8 px-6 py-16">
       <header className="grid gap-2">
-        <p className="text-muted-foreground text-sm font-medium tracking-[0.3em] uppercase">
-          CertDojo
-        </p>
+        <BrandLockup className="mb-2" />
         <h1 className="text-3xl font-semibold tracking-tight">
           Set up your practice space
         </h1>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-label="CertDojo">
+  <rect width="1280" height="320" fill="#EFEBE1"></rect>
+  <rect x="896" y="192" width="64" height="64" fill="#1b2a4a" fill-opacity="0.05"></rect>
+  <rect x="1024" y="128" width="64" height="64" fill="#1b2a4a" fill-opacity="0.05"></rect>
+  <rect x="1152" y="64" width="64" height="64" fill="#2F7F6B" opacity="0.35"></rect>
+  <g transform="translate(76 112) scale(0.9600)">
+    <g fill="#1B2A4A" opacity="0.17">
+      <rect x="4" y="4" width="28" height="28" rx="2"></rect><rect x="36" y="4" width="28" height="28" rx="2"></rect>
+      <rect x="4" y="36" width="28" height="28" rx="2"></rect><rect x="68" y="36" width="28" height="28" rx="2"></rect>
+      <rect x="36" y="68" width="28" height="28" rx="2"></rect><rect x="68" y="68" width="28" height="28" rx="2"></rect>
+    </g>
+    <rect x="4" y="68" width="28" height="28" rx="2" fill="#1B2A4A"></rect>
+    <rect x="36" y="36" width="28" height="28" rx="2" fill="#1B2A4A"></rect>
+    <rect x="68" y="4" width="28" height="28" rx="2" fill="#2F7F6B"></rect>
+  </g>
+  <text x="202" y="150" font-family="Archivo, &#39;Helvetica Neue&#39;, Arial, sans-serif" font-size="60" letter-spacing="-2.1" fill="#1B2A4A"><tspan font-weight="500">cert</tspan><tspan font-weight="800">dojo</tspan></text>
+  <text x="204" y="188" font-family="Archivo, &#39;Helvetica Neue&#39;, Arial, sans-serif" font-size="19" fill="#4A4A46">Open-source practice dojo for tech certification exams.</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12">
+    <rect x="204" y="208" width="168" height="26" rx="4" fill="none" stroke="#2F7F6B"></rect><text x="288" y="225" text-anchor="middle" fill="#2F7F6B">Self-hosted · Zero auth</text>
+    <rect x="382" y="208" width="138" height="26" rx="4" fill="none" stroke="#1b2a4a" stroke-opacity="0.25"></rect><text x="451" y="225" text-anchor="middle" fill="#1B2A4A">Per-domain mastery</text>
+    <rect x="530" y="208" width="96" height="26" rx="4" fill="none" stroke="#1b2a4a" stroke-opacity="0.25"></rect><text x="578" y="225" text-anchor="middle" fill="#1B2A4A">Data export</text>
+    <rect x="636" y="208" width="100" height="26" rx="4" fill="none" stroke="#1b2a4a" stroke-opacity="0.25"></rect><text x="686" y="225" text-anchor="middle" fill="#1B2A4A">Vercel-ready</text>
+  </g>
+</svg>

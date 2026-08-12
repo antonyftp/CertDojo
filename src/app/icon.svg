@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- The brand mark (also inlined in src/components/brand.tsx), made
+       theme-aware for browser tabs: navy on light UIs, cream on dark,
+       matching the brand kit's two variants. -->
+  <style>
+    .base { fill: #1B2A4A; }
+    @media (prefers-color-scheme: dark) {
+      .base { fill: #EFEBE1; }
+    }
+  </style>
+  <g class="base" opacity="0.17">
+    <rect x="4" y="4" width="28" height="28" rx="2"/><rect x="36" y="4" width="28" height="28" rx="2"/>
+    <rect x="4" y="36" width="28" height="28" rx="2"/><rect x="68" y="36" width="28" height="28" rx="2"/>
+    <rect x="36" y="68" width="28" height="28" rx="2"/><rect x="68" y="68" width="28" height="28" rx="2"/>
+  </g>
+  <rect x="4" y="68" width="28" height="28" rx="2" class="base"/>
+  <rect x="36" y="36" width="28" height="28" rx="2" class="base"/>
+  <rect x="68" y="4" width="28" height="28" rx="2" fill="#2F7F6B"/>
+</svg>

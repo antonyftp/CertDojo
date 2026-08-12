@@ -7,6 +7,7 @@ import {
   QuestionCard,
   type SessionQuestion,
 } from "@/app/(app)/certifications/[slug]/quiz/question-card";
+import { BrandLockup } from "@/components/brand";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -160,11 +161,8 @@ export function QuizSession({
     <div className="min-h-dvh">
       <header className="bg-card border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="font-mono text-sm font-semibold tracking-widest"
-          >
-            CERTDOJO<span className="text-primary">{"///"}</span>
+          <Link href="/dashboard">
+            <BrandLockup />
           </Link>
           {phase === "active" && currentQuestion ? (
             <span className="text-muted-foreground truncate font-mono text-xs tracking-wider uppercase">
