@@ -1,9 +1,70 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 
+import { getDatabase } from "@/db/client";
+import { USER_PROFILE_ID } from "@/db/queries";
 import { restoreBackup } from "@/lib/backup/restore";
 import { backupFileSchema } from "@/lib/backup/schema";
+
+const profileSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Please enter your name.")
+    .max(120, "Name must be 120 characters or fewer."),
+  jobTitle: z
+    .string()
+    .trim()
+    .min(1, "Please enter your job title.")
+    .max(120, "Job title must be 120 characters or fewer."),
+});
+
+export type ProfileState =
+  | { status: "idle" }
+  | { status: "success" }
+  | { status: "error"; message: string }
+  | { status: "error"; fieldErrors: { name?: string; jobTitle?: string } };
+
+export async function updateProfile(
+  _previousState: ProfileState,
+  formData: FormData,
+): Promise<ProfileState> {
+  const parsed = profileSchema.safeParse({
+    name: formData.get("name"),
+    jobTitle: formData.get("jobTitle"),
+  });
+
+  if (!parsed.success) {
+    const flattened = z.flattenError(parsed.error);
+    return {
+      status: "error",
+      fieldErrors: {
+        name: flattened.fieldErrors.name?.[0],
+        jobTitle: flattened.fieldErrors.jobTitle?.[0],
+      },
+    };
+  }
+
+  const { db, schema } = getDatabase();
+
+  const updated = await db
+    .update(schema.userProfile)
+    .set({ name: parsed.data.name, jobTitle: parsed.data.jobTitle })
+    .where(eq(schema.userProfile.id, USER_PROFILE_ID))
+    .returning({ id: schema.userProfile.id });
+
+  if (updated.length === 0) {
+    return { status: "error", message: "Profile not found. Complete onboarding first." };
+  }
+
+  revalidatePath("/settings");
+  revalidatePath("/", "layout");
+
+  return { status: "success" };
+}
 
 export type ImportState =
   | { status: "idle" }

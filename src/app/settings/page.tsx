@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DownloadIcon } from "lucide-react";
 
 import { ImportForm } from "@/app/settings/import-form";
+import { ProfileForm } from "@/app/settings/profile-form";
 import { BrandLockup } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,18 +55,15 @@ export default async function SettingsPage() {
           <Card>
             <CardHeader>
               <SectionKicker>Candidate</SectionKicker>
-            </CardHeader>
-            <CardContent className="grid gap-1">
-              <p className="font-medium">
-                {profile.name}
-                <span className="text-muted-foreground font-normal">
-                  {" "}
-                  · {profile.jobTitle}
-                </span>
-              </p>
               <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
                 On record since {profile.createdAt.toISOString().slice(0, 10)}
               </p>
+            </CardHeader>
+            <CardContent>
+              <ProfileForm
+                initialName={profile.name}
+                initialJobTitle={profile.jobTitle}
+              />
             </CardContent>
           </Card>
         ) : null}
