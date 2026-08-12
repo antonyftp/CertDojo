@@ -1,3 +1,5 @@
+import "./load-env";
+
 import { getRuntimeMode, getSqlitePath } from "@/db/client";
 import { runMigrations } from "@/db/migrate";
 

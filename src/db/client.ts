@@ -50,6 +50,17 @@ function createDatabase(): { db: AppDatabase; schema: AppSchema } {
     };
   }
 
+  // On Vercel the filesystem is read-only and SQLite cannot work: fail with
+  // a clear message instead of attempting the write below (DEV_PLAN_V1.md
+  // Step 9).
+  if (process.env.VERCEL) {
+    throw new Error(
+      "CertDojo is running on Vercel without a Postgres database. " +
+        "Attach one (Vercel dashboard → Storage → Create Database → Postgres/Neon) " +
+        "so POSTGRES_URL/DATABASE_URL is injected, then redeploy.",
+    );
+  }
+
   const file = getSqlitePath();
   fs.mkdirSync(path.dirname(file), { recursive: true });
 

@@ -4,6 +4,8 @@
 // the same code exercises the Postgres adapter. Inserted rows are removed
 // at the end, so it is safe to run against a real database.
 
+import "./load-env";
+
 import { eq } from "drizzle-orm";
 import fs from "node:fs";
 

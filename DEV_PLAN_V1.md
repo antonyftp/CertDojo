@@ -268,8 +268,8 @@ features (the demo `study_plans` table is already gone).
 **Files involved**: any Vercel configuration (`vercel.json` if needed), documentation.
 
 **Validation criteria**:
-- A test deployment on Vercel (with Postgres attached) allows completing onboarding and answering a quiz without error.
 - No filesystem write is ever attempted in Vercel mode (verified by re-reading the code, especially `db/client.ts` and any `fs` access).
+- The actual test deployment to Vercel (with Postgres attached, completing onboarding and answering a quiz without error) is done by the user, not Claude — Claude prepares/documents the setup but does not perform or claim to perform a live deployment test.
 
 ---
 
