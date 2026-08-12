@@ -57,7 +57,10 @@ export async function updateProfile(
     .returning({ id: schema.userProfile.id });
 
   if (updated.length === 0) {
-    return { status: "error", message: "Profile not found. Complete onboarding first." };
+    return {
+      status: "error",
+      message: "Profile not found. Complete onboarding first.",
+    };
   }
 
   revalidatePath("/settings");

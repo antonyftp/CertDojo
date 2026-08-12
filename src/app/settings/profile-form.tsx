@@ -12,7 +12,10 @@ export type ProfileFormProps = {
   initialJobTitle: string;
 };
 
-export function ProfileForm({ initialName, initialJobTitle }: ProfileFormProps) {
+export function ProfileForm({
+  initialName,
+  initialJobTitle,
+}: ProfileFormProps) {
   const [state, formAction, pending] = useActionState(updateProfile, {
     status: "idle" as const,
   });
@@ -27,12 +30,16 @@ export function ProfileForm({ initialName, initialJobTitle }: ProfileFormProps) 
           autoComplete="name"
           defaultValue={initialName}
           aria-invalid={
-            state.status === "error" && "fieldErrors" in state && state.fieldErrors?.name
+            state.status === "error" &&
+            "fieldErrors" in state &&
+            state.fieldErrors?.name
               ? true
               : undefined
           }
         />
-        {state.status === "error" && "fieldErrors" in state && state.fieldErrors?.name ? (
+        {state.status === "error" &&
+        "fieldErrors" in state &&
+        state.fieldErrors?.name ? (
           <p className="text-destructive text-sm" role="alert">
             {state.fieldErrors.name}
           </p>
@@ -46,12 +53,16 @@ export function ProfileForm({ initialName, initialJobTitle }: ProfileFormProps) 
           autoComplete="organization-title"
           defaultValue={initialJobTitle}
           aria-invalid={
-            state.status === "error" && "fieldErrors" in state && state.fieldErrors?.jobTitle
+            state.status === "error" &&
+            "fieldErrors" in state &&
+            state.fieldErrors?.jobTitle
               ? true
               : undefined
           }
         />
-        {state.status === "error" && "fieldErrors" in state && state.fieldErrors?.jobTitle ? (
+        {state.status === "error" &&
+        "fieldErrors" in state &&
+        state.fieldErrors?.jobTitle ? (
           <p className="text-destructive text-sm" role="alert">
             {state.fieldErrors.jobTitle}
           </p>
