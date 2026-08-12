@@ -4,3 +4,9 @@ node_modules
 coverage
 playwright-report
 test-results
+data
+.env*
+.claude
+docker
+e2e
+tsconfig.tsbuildinfo

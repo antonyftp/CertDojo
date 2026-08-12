@@ -24,7 +24,7 @@
 - [x] Step 5 — Quiz engine
 - [x] Step 6 — Certification detail view (by domain)
 - [x] Step 7 — User data export / import
-- [ ] Step 8 — Dockerization (turnkey Local mode)
+- [x] Step 8 — Dockerization (turnkey Local mode)
 - [ ] Step 9 — Vercel deployment readiness
 - [ ] Step 10 — Tests, final documentation, open source governance
 
@@ -239,7 +239,7 @@ features (the demo `study_plans` table is already gone).
 
 ---
 
-## Step 8 — Dockerization (turnkey Local mode) `[ ]`
+## Step 8 — Dockerization (turnkey Local mode) `[x]`
 
 **Goal**: let a non-developer user run CertPrep locally without installing Node.
 
