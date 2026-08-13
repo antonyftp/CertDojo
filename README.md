@@ -25,7 +25,7 @@ domain by domain — on your machine, with your data.
 ## 🥋 What is CertDojo?
 
 CertDojo is a **self-hosted practice space** for tech certification exams
-(AWS, CNCF, HashiCorp, …). Pick the certifications you're preparing, answer
+(AWS, Microsoft, Google, HashiCorp, …). Pick the certifications you're preparing, answer
 exam-style single- and multiple-choice questions, and track your real
 readiness against the official exam blueprint.
 
