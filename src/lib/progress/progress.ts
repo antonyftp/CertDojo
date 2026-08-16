@@ -26,6 +26,10 @@ export type DomainProgress = {
   answeredCount: number;
   correctCount: number;
   masteryPercent: number;
+  // Computed on the exact ratio, like the certification-level status below —
+  // never on masteryPercent, which is already rounded. Comparing the rounded
+  // value would seal a domain at 795/1000 (79.5% → 80).
+  isExamReady: boolean;
 };
 
 export type CertificationProgress = {
@@ -38,7 +42,11 @@ export type CertificationProgress = {
   domains: DomainProgress[];
 };
 
-function toPercent(numerator: number, denominator: number): number {
+// Single definition of "how a ratio becomes a displayed percentage" for the
+// whole app. Exported so client components (quiz session report) round the
+// same way the server-side progress does. Safe to import from a client
+// component: this module never imports `server-only`.
+export function toPercent(numerator: number, denominator: number): number {
   return denominator === 0 ? 0 : Math.round((numerator / denominator) * 100);
 }
 
@@ -85,6 +93,9 @@ export function computeCertificationProgress(
       answeredCount,
       correctCount,
       masteryPercent: toPercent(correctCount, domainQuestions.length),
+      isExamReady:
+        domainQuestions.length > 0 &&
+        correctCount / domainQuestions.length >= examReadyThreshold,
     };
   });
 

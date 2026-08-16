@@ -23,13 +23,26 @@ export const userProfile = pgTable("user_profile", {
     .defaultNow(),
 });
 
-export const userCertifications = pgTable("user_certifications", {
-  id: serial("id").primaryKey(),
-  // References /content/<provider>/<slug>, not a database table.
-  certificationSlug: text("certification_slug").notNull(),
-  addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
-  isActive: boolean("is_active").notNull().default(true),
-});
+export const userCertifications = pgTable(
+  "user_certifications",
+  {
+    id: serial("id").primaryKey(),
+    // References /content/<provider>/<slug>, not a database table.
+    certificationSlug: text("certification_slug").notNull(),
+    addedAt: timestamp("added_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    isActive: boolean("is_active").notNull().default(true),
+  },
+  (table) => [
+    // certification_slug is the natural key every write path already treats as
+    // unique (removing a certification flips is_active, it never deletes the
+    // row, so history survives a remove/re-add cycle). Enforcing it in the
+    // schema is what lets those paths be single upserts instead of manual
+    // read-then-insert-or-update round trips.
+    uniqueIndex("user_certifications_slug_unique").on(table.certificationSlug),
+  ],
+);
 
 export const questionAttempts = pgTable(
   "question_attempts",

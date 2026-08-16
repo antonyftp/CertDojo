@@ -22,15 +22,26 @@ export const userProfile = sqliteTable("user_profile", {
     .$defaultFn(() => new Date()),
 });
 
-export const userCertifications = sqliteTable("user_certifications", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  // References /content/<provider>/<slug>, not a database table.
-  certificationSlug: text("certification_slug").notNull(),
-  addedAt: integer("added_at", { mode: "timestamp_ms" })
-    .notNull()
-    .$defaultFn(() => new Date()),
-  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
-});
+export const userCertifications = sqliteTable(
+  "user_certifications",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    // References /content/<provider>/<slug>, not a database table.
+    certificationSlug: text("certification_slug").notNull(),
+    addedAt: integer("added_at", { mode: "timestamp_ms" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  },
+  (table) => [
+    // certification_slug is the natural key every write path already treats as
+    // unique (removing a certification flips is_active, it never deletes the
+    // row, so history survives a remove/re-add cycle). Enforcing it in the
+    // schema is what lets those paths be single upserts instead of manual
+    // read-then-insert-or-update round trips.
+    uniqueIndex("user_certifications_slug_unique").on(table.certificationSlug),
+  ],
+);
 
 export const questionAttempts = sqliteTable(
   "question_attempts",

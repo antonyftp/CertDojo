@@ -105,8 +105,9 @@ Postgres automatically.
    to GitHub/GitLab/Bitbucket first). The first deployment builds, but the
    app can't store data yet.
 2. **Attach Postgres**: project → **Storage** → **Create Database** → pick a
-   Postgres provider (e.g. **Neon**). This injects `DATABASE_URL` (and the
-   legacy `POSTGRES_URL` alias) into the project.
+   Postgres provider (e.g. **Neon**). This injects `POSTGRES_URL` and/or
+   `DATABASE_URL` into the project — CertDojo reads `POSTGRES_URL` first and
+   accepts `DATABASE_URL` as an equivalent, so either one is enough.
 3. **Redeploy** so the new environment variables are picked up.
 4. **Apply the migrations** once, from your machine:
 
@@ -146,17 +147,16 @@ other CertDojo instance, in either mode.
 
 Currently shipped certifications:
 
-| Provider | Certification                        | Exam code | Questions |
-| -------- | ------------------------------------ | --------- | --------- |
-| AWS      | AWS Certified Cloud Practitioner     | CLF-C02   | 20        |
-| CNCF     | Kubernetes and Cloud Native Associate| KCNA      | 14        |
+| Provider | Certification                       | Exam code | Questions |
+| -------- | ----------------------------------- | --------- | --------- |
+| AWS      | AWS Certified Developer - Associate | DVA-C02   | 449       |
 
 Content is plain JSON, versioned in Git, never stored in the database:
 
 ```
 content/
-  <provider>/            e.g. aws, cncf
-    <slug>/              e.g. clf-c02, kcna
+  <provider>/            e.g. aws
+    <slug>/              e.g. dva-c02
       meta.json          name, exam code, official URL, domain blueprint
       questions.json     the question bank
 ```
@@ -176,6 +176,7 @@ pnpm lint               # eslint
 pnpm format:check       # prettier (pnpm format to write)
 pnpm typecheck          # next typegen + tsc --noEmit
 pnpm test               # Vitest unit/integration tests
+pnpm test:watch         # Vitest in watch mode
 pnpm test:e2e           # Playwright e2e (once: pnpm exec playwright install --with-deps chromium)
 pnpm validate-content   # validate /content against the Zod schemas
 pnpm db:generate        # regenerate migrations for both dialects

@@ -28,10 +28,10 @@ The mode is **not a toggle in the UI**: it's determined automatically by how the
 | Language | TypeScript | latest stable |
 | CSS | Tailwind CSS | 4.x (Oxide engine, CSS-native config) |
 | Components | shadcn/ui | latest version via CLI |
-| Ephemeral UI state | Zustand | 5.x |
+| Ephemeral UI state | React `useState` / `useActionState` (Zustand not needed in V1) | — |
 | ORM | Drizzle ORM + drizzle-kit | 0.45.x or newer |
 | DB in Local mode | SQLite (file) via `better-sqlite3` | latest stable |
-| DB in Vercel mode | Postgres (Vercel Postgres / Neon) via `@neondatabase/serverless` or `pg` | latest stable |
+| DB in Vercel mode | Postgres (Vercel Postgres / Neon) via `@neondatabase/serverless` | latest stable |
 | Validation | Zod | 4.x |
 | Unit tests | Vitest + Testing Library | latest stable |
 | E2E tests | Playwright | latest stable |
@@ -145,29 +145,43 @@ Validation: Zod schemas (`lib/content/schema.ts`) validating `meta.json` and `qu
 
 Loading: `lib/content/loader.ts`, server-only reading (`fs`), with in-memory caching — works the same way locally and at build/runtime on Vercel since it's read-only, never write.
 
-### 4.4 Target project structure
+### 4.4 Project structure (as built)
+
+Application code lives under `src/` — an accepted divergence from this
+document's original root-level layout. `/content` and `/scripts` stay at the
+repo root, and the Docker files sit at the root rather than in a `/docker`
+subdirectory. The path alias `@/*` maps to `src/*`.
 
 ```
-/app
-  /onboarding
-  /dashboard
-  /certifications/[slug]
-  /certifications/[slug]/quiz
-/components        -- UI components (shadcn + custom)
-/db
-  schema.ts
-  client.ts
-  /migrations/sqlite
-  /migrations/postgres
-/content            -- question banks (see 4.3)
-/lib
-  /content          -- schema.ts, loader.ts
-  /progress         -- progress/mastery calculations
-/scripts
+/content            -- question banks (see 4.3), repo root
+  <provider>/<slug>/{meta.json,questions.json}
+/scripts            -- repo root
   validate-content.ts
-/docker
-  Dockerfile
-  docker-compose.yml
+  migrate.ts
+  db-smoke-test.ts
+/src
+  /app
+    /onboarding
+    /settings
+    /(app)/dashboard
+    /(app)/certifications/[slug]
+    /(app)/certifications/[slug]/quiz
+  /components       -- UI components (custom + shadcn under /ui)
+  /db
+    client.ts       -- sole entry point for Local/Vercel mode detection
+    queries.ts
+    schema-sqlite.ts
+    schema-postgres.ts    -- kept structurally identical to the SQLite one
+    /migrations/sqlite
+    /migrations/postgres
+  /lib
+    theme.ts        -- light/dark/system preference (cookie-backed)
+    /content        -- schema.ts, loader.ts
+    /progress       -- progress/mastery calculations
+    /quiz           -- session batching, grading
+    /backup         -- export/import of user data
+Dockerfile          -- repo root
+docker-compose.yml  -- repo root
 ```
 
 ## 5. V1 Features

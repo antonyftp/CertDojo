@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "user_certifications_slug_unique" ON "user_certifications" USING btree ("certification_slug");

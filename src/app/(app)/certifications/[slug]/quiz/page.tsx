@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { getAttemptsForCertification } from "@/db/queries";
 import { getCertificationBySlug, getQuestions } from "@/lib/content/loader";
+import {
+  parseBatchParam,
+  pickSessionQuestions,
+  RANDOM_BATCH_SIZES,
+} from "@/lib/quiz/quiz";
+import { QuizSetup } from "@/app/(app)/certifications/[slug]/quiz/quiz-setup";
 import {
   QuizSession,
   type SessionQuestion,
@@ -21,10 +27,8 @@ export default async function QuizPage({
   params,
   searchParams,
 }: PageProps<"/certifications/[slug]/quiz">) {
-  const [{ slug }, { domain: domainParam }] = await Promise.all([
-    params,
-    searchParams,
-  ]);
+  const [{ slug }, { domain: domainParam, batch: batchParam }] =
+    await Promise.all([params, searchParams]);
   const meta = getCertificationBySlug(slug);
 
   if (!meta) {
@@ -54,15 +58,82 @@ export default async function QuizPage({
     (question) => domain === null || question.domainId === domain.id,
   );
   const attempts = await getAttemptsForCertification(slug);
-  const domainNames = new Map(
-    meta.domains.map((domain) => [domain.id, domain.name]),
+
+  const masteredIds = new Set(
+    attempts
+      .filter((attempt) => attempt.isCorrect)
+      .map((attempt) => attempt.questionId),
   );
+  const unmasteredIds = new Set(
+    questions.map((q) => q.id).filter((id) => !masteredIds.has(id)),
+  );
+
+  const backHref = domain ? `/certifications/${slug}` : "/dashboard";
+  const backLabel = domain ? "Certification" : "Dashboard";
+
+  // Audit FE-01. Without ?batch= there is no session yet, so the setup screen
+  // renders from counts alone — the 517 KB of question text stays on the
+  // server. Only once a batch is chosen does the next request materialise
+  // exactly the questions that session needs.
+  const batch = batchParam === undefined ? null : parseBatchParam(batchParam);
+
+  if (batch === null) {
+    // A ?batch= value the setup screen never offers is a stale or
+    // hand-edited link, and is treated like a bad ?domain=.
+    if (batchParam !== undefined) {
+      notFound();
+    }
+
+    return (
+      <QuizSetup
+        certification={{
+          name: meta.name,
+          provider: meta.provider,
+          examCode: meta.examCode,
+        }}
+        domain={domain}
+        backHref={backHref}
+        backLabel={backLabel}
+        choices={[
+          { value: "all", label: "All questions", count: questions.length },
+          {
+            value: "unmastered",
+            label: "Not yet mastered",
+            count: unmasteredIds.size,
+            disabled: unmasteredIds.size === 0,
+          },
+          ...RANDOM_BATCH_SIZES.filter((size) => size < questions.length).map(
+            (size) => ({
+              value: `random-${size}`,
+              label: `${size} random`,
+              count: size,
+            }),
+          ),
+        ]}
+      />
+    );
+  }
+
+  const picked = pickSessionQuestions(questions, unmasteredIds, batch);
+
+  if (picked.length === 0) {
+    // Nothing to practise for this batch (e.g. ?batch=unmastered once
+    // everything is mastered): send the user back to choose another rather
+    // than opening an empty session.
+    redirect(
+      domain
+        ? `/certifications/${slug}/quiz?domain=${domain.id}`
+        : `/certifications/${slug}/quiz`,
+    );
+  }
+
+  const domainNames = new Map(meta.domains.map((d) => [d.id, d.name]));
 
   // Client payload deliberately excludes correctOptionIds and explanation:
   // grading is server-side only (see actions.ts). requiredSelections tells
   // the client how many answers to pencil in — the same information a real
   // exam prints as "(Choose TWO)".
-  const sessionQuestions: SessionQuestion[] = questions.map((question) => ({
+  const sessionQuestions: SessionQuestion[] = picked.map((question) => ({
     id: question.id,
     domainName: domainNames.get(question.domainId) ?? question.domainId,
     question: question.question,
@@ -76,15 +147,6 @@ export default async function QuizPage({
     })),
   }));
 
-  const masteredIds = new Set(
-    attempts
-      .filter((attempt) => attempt.isCorrect)
-      .map((attempt) => attempt.questionId),
-  );
-  const unmasteredIds = questions
-    .map((question) => question.id)
-    .filter((id) => !masteredIds.has(id));
-
   return (
     <QuizSession
       certification={{
@@ -94,7 +156,13 @@ export default async function QuizPage({
         examCode: meta.examCode,
       }}
       questions={sessionQuestions}
-      initialUnmasteredIds={unmasteredIds}
+      backHref={backHref}
+      backLabel={backLabel}
+      setupHref={
+        domain
+          ? `/certifications/${slug}/quiz?domain=${domain.id}`
+          : `/certifications/${slug}/quiz`
+      }
       domain={domain}
     />
   );

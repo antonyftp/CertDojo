@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useActionState, useState } from "react";
 import { PlusIcon } from "lucide-react";
 
 import {
@@ -44,23 +44,28 @@ export function AddCertificationDialog({
   providerGroups: ProviderGroup[];
 }) {
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+  // Audit FE-02: this was the only form in the app wrapping its Server Action
+  // in a client closure over startTransition. useActionState passes the
+  // action itself to <form action>, which is what the other three forms do.
+  const [state, formAction, pending] = useActionState(
+    addCertifications,
+    initialAddCertificationsState,
+  );
 
-  function submit(formData: FormData) {
-    startTransition(async () => {
-      const result = await addCertifications(
-        initialAddCertificationsState,
-        formData,
-      );
+  // Closing on success is an adjustment to a state change, not a side effect,
+  // so it happens during render (React's "adjusting state when props change"
+  // pattern) rather than in an effect — which would cost an extra render pass
+  // and trips react-hooks/set-state-in-effect. Comparing object identity
+  // makes it fire once per submission, so reopening the dialog afterwards
+  // does not immediately re-close it.
+  const [settledState, setSettledState] = useState(state);
 
-      if (result.status === "error") {
-        setErrorMessage(result.message ?? "Something went wrong. Try again.");
-      } else {
-        setErrorMessage(null);
-        setOpen(false);
-      }
-    });
+  if (state !== settledState) {
+    setSettledState(state);
+
+    if (state.status === "success") {
+      setOpen(false);
+    }
   }
 
   const nothingLeftToTrack = providerGroups.length === 0;
@@ -90,7 +95,7 @@ export function AddCertificationDialog({
             tracked it before.
           </DialogDescription>
         </DialogHeader>
-        <form action={submit} className="grid gap-6">
+        <form action={formAction} className="grid gap-6">
           <div className="grid max-h-80 gap-6 overflow-y-auto">
             {providerGroups.map((group) => (
               <fieldset key={group.provider} className="grid gap-3">
@@ -121,9 +126,9 @@ export function AddCertificationDialog({
               </fieldset>
             ))}
           </div>
-          {errorMessage ? (
+          {state.status === "error" ? (
             <p className="text-destructive text-sm" role="alert">
-              {errorMessage}
+              {state.message ?? "Something went wrong. Try again."}
             </p>
           ) : null}
           <DialogFooter>

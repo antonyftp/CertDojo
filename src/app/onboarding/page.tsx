@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -8,6 +9,9 @@ import {
 import { BrandLockup } from "@/components/brand";
 import { getUserProfile } from "@/db/queries";
 import { getAllCertifications } from "@/lib/content/loader";
+
+// Audit A11Y-07: see the dashboard page (WCAG 2.4.2).
+export const metadata: Metadata = { title: "Set up — CertDojo" };
 
 // Onboarding state lives in the database and must be read per request,
 // never at build time.
@@ -44,10 +48,16 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <main className="mx-auto grid w-full max-w-xl gap-8 px-6 py-16">
+    <main
+      id="main-content"
+      className="mx-auto grid w-full max-w-xl gap-8 px-6 py-16"
+    >
       <header className="grid gap-2">
         <BrandLockup className="mb-2" />
-        <h1 className="text-3xl font-semibold tracking-tight">
+        {/* Audit DS-10: this was the only h1 in the app at text-3xl; the
+            other four screens are all text-2xl, and DESIGN.md gives no reason
+            for onboarding to differ. */}
+        <h1 className="text-2xl font-semibold tracking-tight">
           Set up your practice space
         </h1>
         <p className="text-muted-foreground text-base leading-7">

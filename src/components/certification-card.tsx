@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { BlueprintStrip } from "@/components/blueprint-strip";
-import { Badge } from "@/components/ui/badge";
+import { Kicker } from "@/components/kicker";
+import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,32 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { CertificationMeta } from "@/lib/content/schema";
-import type {
-  CertificationProgress,
-  CertificationStatus,
-} from "@/lib/progress/progress";
-
-// Status chips are worded and colored like score-report bands (DESIGN.md):
-// exam-ready wears the credential-seal gold, in-progress the interactive
-// blue tint, not-started stays quiet. Shared with the certification detail
-// view so both screens speak the same status vocabulary.
-export const statusChip: Record<
-  CertificationStatus,
-  { label: string; className: string }
-> = {
-  "not-started": {
-    label: "Not started",
-    className: "border-border text-muted-foreground",
-  },
-  "in-progress": {
-    label: "In progress",
-    className: "border-primary/30 bg-accent text-accent-foreground",
-  },
-  "exam-ready": {
-    label: "Exam ready",
-    className: "border-seal/40 bg-seal/15 text-seal",
-  },
-};
+import type { CertificationProgress } from "@/lib/progress/progress";
 
 export function CertificationCard({
   meta,
@@ -49,10 +25,8 @@ export function CertificationCard({
   meta: CertificationMeta;
   progress: CertificationProgress;
 }) {
-  const chip = statusChip[progress.status];
-
   return (
-    <Card>
+    <Card data-testid="certification-card">
       <CardHeader>
         <CardDescription className="text-muted-foreground font-mono text-xs tracking-wider uppercase">
           {meta.provider} · {meta.examCode}
@@ -66,12 +40,7 @@ export function CertificationCard({
           </Link>
         </CardTitle>
         <CardAction>
-          <Badge
-            variant="outline"
-            className={`font-mono text-[10px] tracking-wider uppercase ${chip.className}`}
-          >
-            {chip.label}
-          </Badge>
+          <StatusBadge status={progress.status} />
         </CardAction>
       </CardHeader>
       <CardContent className="grid gap-5">
@@ -90,13 +59,14 @@ export function CertificationCard({
           <Progress
             value={progress.masteryPercent}
             aria-label={`Mastery: ${progress.masteryPercent}%`}
-            className="bg-muted h-2 [&>[data-slot=progress-indicator]]:bg-mastery"
+            tone="mastery"
+            className="h-2"
           />
         </div>
         <div className="grid gap-1.5">
-          <span className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">
+          <Kicker as="span" className="text-2xs">
             Exam blueprint
-          </span>
+          </Kicker>
           <BlueprintStrip domains={progress.domains} />
         </div>
       </CardContent>

@@ -38,26 +38,46 @@ export function OnboardingForm({
   );
 
   return (
-    <form action={formAction} className="grid gap-6">
+    // noValidate is deliberate (audit A11Y-09): the `required` attributes
+    // below exist so assistive tech announces the fields as required, but
+    // native bubble validation would preempt the server-side messages this
+    // form actually renders — and it could not cover the certification
+    // checkbox group at all, which would leave validation split across two
+    // mechanisms with two different wordings. The server stays the only
+    // validator; the browser only reports the state.
+    <form action={formAction} noValidate className="grid gap-6">
       <Card>
         <CardHeader>
           <CardTitle>About you</CardTitle>
           <CardDescription>
-            Asked once — CertDojo is a single-user tool with no account.
+            Asked once — CertDojo is a single-user tool with no account. Both
+            fields are required.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
+          {/* Audit A11Y-03 / A11Y-09: aria-invalid was set but the error text
+              was never tied to the field (nothing in the repo used
+              aria-describedby), and both fields are required server-side
+              without saying so to the user or the accessibility tree. */}
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               name="name"
+              required
               autoComplete="name"
               placeholder="Ada Lovelace"
               aria-invalid={state.fieldErrors.name ? true : undefined}
+              aria-describedby={
+                state.fieldErrors.name ? "name-error" : undefined
+              }
             />
             {state.fieldErrors.name ? (
-              <p className="text-destructive text-sm" role="alert">
+              <p
+                id="name-error"
+                className="text-destructive text-sm"
+                role="alert"
+              >
                 {state.fieldErrors.name}
               </p>
             ) : null}
@@ -67,12 +87,20 @@ export function OnboardingForm({
             <Input
               id="jobTitle"
               name="jobTitle"
+              required
               autoComplete="organization-title"
               placeholder="Cloud Engineer"
               aria-invalid={state.fieldErrors.jobTitle ? true : undefined}
+              aria-describedby={
+                state.fieldErrors.jobTitle ? "jobTitle-error" : undefined
+              }
             />
             {state.fieldErrors.jobTitle ? (
-              <p className="text-destructive text-sm" role="alert">
+              <p
+                id="jobTitle-error"
+                className="text-destructive text-sm"
+                role="alert"
+              >
                 {state.fieldErrors.jobTitle}
               </p>
             ) : null}

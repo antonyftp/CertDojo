@@ -4,18 +4,14 @@ import { notFound } from "next/navigation";
 import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 
 import { BlueprintStrip } from "@/components/blueprint-strip";
-import { BrandLockup } from "@/components/brand";
-import { statusChip } from "@/components/certification-card";
-import { Badge } from "@/components/ui/badge";
+import { AppHeader, AppHeaderBackLink } from "@/components/app-header";
+import { Kicker } from "@/components/kicker";
+import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { getAttemptsForCertification } from "@/db/queries";
 import { getCertificationBySlug, getQuestions } from "@/lib/content/loader";
-import {
-  computeCertificationProgress,
-  EXAM_READY_THRESHOLD,
-} from "@/lib/progress/progress";
-import { cn } from "@/lib/utils";
+import { computeCertificationProgress } from "@/lib/progress/progress";
 
 export async function generateMetadata({
   params,
@@ -43,36 +39,21 @@ export default async function CertificationDetailPage({
   const questions = getQuestions(slug);
   const attempts = await getAttemptsForCertification(slug);
   const progress = computeCertificationProgress(meta, questions, attempts);
-  const chip = statusChip[progress.status];
 
   return (
     <div className="min-h-dvh">
-      <header className="bg-card border-b">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Link href="/dashboard">
-            <BrandLockup />
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-widest uppercase"
-          >
-            ← Dashboard
-          </Link>
-        </div>
-      </header>
+      <AppHeader>
+        <AppHeaderBackLink href="/dashboard" label="Dashboard" />
+      </AppHeader>
 
-      <main className="mx-auto grid w-full max-w-3xl gap-8 px-6 py-10">
+      <main
+        id="main-content"
+        className="mx-auto grid w-full max-w-3xl gap-8 px-6 py-10"
+      >
         <section className="grid gap-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-              {meta.provider} · {meta.examCode}
-            </p>
-            <Badge
-              variant="outline"
-              className={`font-mono text-[10px] tracking-wider uppercase ${chip.className}`}
-            >
-              {chip.label}
-            </Badge>
+            <Kicker>{`${meta.provider} · ${meta.examCode}`}</Kicker>
+            <StatusBadge status={progress.status} />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{meta.name}</h1>
           <p className="text-muted-foreground text-sm">{meta.description}</p>
@@ -101,13 +82,12 @@ export default async function CertificationDetailPage({
         </section>
 
         <section className="grid gap-3">
-          <h2 className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">
+          <Kicker as="h2" className="text-2xs">
             Domain breakdown
-          </h2>
+          </Kicker>
           <ol className="bg-card divide-y rounded-xl border">
             {progress.domains.map((domain, index) => {
-              const isSealed =
-                domain.masteryPercent >= EXAM_READY_THRESHOLD * 100;
+              const isSealed = domain.isExamReady;
 
               return (
                 <li
@@ -120,20 +100,16 @@ export default async function CertificationDetailPage({
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="font-medium">{domain.domainName}</span>
-                      <span className="text-muted-foreground ml-auto font-mono text-[10px] tracking-widest uppercase">
-                        Weight {domain.weight}%
-                      </span>
+                      <Kicker as="span" className="ml-auto text-2xs">
+                        {`Weight ${domain.weight}%`}
+                      </Kicker>
                     </div>
                     <div className="flex items-center gap-3">
                       <Progress
                         value={domain.masteryPercent}
                         aria-label={`${domain.domainName} mastery: ${domain.masteryPercent}%`}
-                        className={cn(
-                          "bg-muted h-2",
-                          isSealed
-                            ? "[&>[data-slot=progress-indicator]]:bg-seal"
-                            : "[&>[data-slot=progress-indicator]]:bg-mastery",
-                        )}
+                        tone={isSealed ? "seal" : "mastery"}
+                        className="h-2"
                       />
                       <span className="text-muted-foreground shrink-0 font-mono text-xs">
                         {domain.masteryPercent}% · {domain.correctCount}/
@@ -142,9 +118,9 @@ export default async function CertificationDetailPage({
                     </div>
                   </div>
                   {domain.totalQuestions === 0 ? (
-                    <span className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">
+                    <Kicker as="span" className="text-2xs">
                       No questions yet
-                    </span>
+                    </Kicker>
                   ) : (
                     <Button asChild size="sm" variant="outline">
                       <Link

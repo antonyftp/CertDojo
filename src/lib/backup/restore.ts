@@ -1,10 +1,24 @@
 import "server-only";
 
-import { eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 import { getDatabase } from "@/db/client";
 import { USER_PROFILE_ID } from "@/db/queries";
 import type { BackupFile } from "@/lib/backup/schema";
+
+// Chunk size for the multi-row upserts below: keeps every statement well
+// under either dialect's bind-parameter limit, whatever the backup's size.
+const CHUNK_SIZE = 400;
+
+function chunk<T>(rows: T[]): T[][] {
+  const chunks: T[][] = [];
+
+  for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
+    chunks.push(rows.slice(i, i + CHUNK_SIZE));
+  }
+
+  return chunks;
+}
 
 // Writes an already-validated backup into the database (SPECIFICATIONS.md
 // §5.5). Every write is an upsert on a natural key — importing twice, or
@@ -12,6 +26,11 @@ import type { BackupFile } from "@/lib/backup/schema";
 // imported values (a restore, not a merge). Unknown certification slugs are
 // accepted on purpose: content may lag user data on the target instance,
 // and the dashboard already renders a "missing content" card for them.
+//
+// Not atomic, and cannot be: the production neon-http driver has no
+// transaction support (see the note in src/db/client.ts). Every statement is
+// idempotent instead, so re-running a failed import converges on the backup's
+// contents rather than compounding a partial write.
 export async function restoreBackup(backup: BackupFile): Promise<void> {
   const { db, schema } = getDatabase();
 
@@ -23,43 +42,29 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
       set: { ...backup.userProfile },
     });
 
-  // certification_slug has no unique constraint (only the id PK), so this
-  // upsert is manual: update rows whose slug already exists, insert the rest.
-  const existing = await db.select().from(schema.userCertifications);
-  const existingBySlug = new Map(
-    existing.map((row) => [row.certificationSlug, row]),
-  );
-
-  const certsToInsert = backup.userCertifications.filter(
-    (cert) => !existingBySlug.has(cert.certificationSlug),
-  );
-
-  if (certsToInsert.length > 0) {
-    await db.insert(schema.userCertifications).values(certsToInsert);
+  // Upsert on the unique certification_slug: the backup's addedAt/isActive
+  // win over whatever the row currently holds (a restore, not a merge), while
+  // the row's id — and therefore the attempt history keyed on the slug — is
+  // preserved. `excluded` refers to the values this statement tried to
+  // insert, and is valid in both SQLite and Postgres.
+  for (const rows of chunk(backup.userCertifications)) {
+    await db
+      .insert(schema.userCertifications)
+      .values(rows)
+      .onConflictDoUpdate({
+        target: schema.userCertifications.certificationSlug,
+        set: {
+          addedAt: sql`excluded.added_at`,
+          isActive: sql`excluded.is_active`,
+        },
+      });
   }
 
-  for (const cert of backup.userCertifications) {
-    const row = existingBySlug.get(cert.certificationSlug);
-
-    if (row) {
-      await db
-        .update(schema.userCertifications)
-        .set({ addedAt: cert.addedAt, isActive: cert.isActive })
-        .where(eq(schema.userCertifications.id, row.id));
-    }
-  }
-
-  // Attempts upsert on the unique (certification_slug, question_id) pair,
-  // batched via `excluded` (valid in both SQLite and Postgres). Chunked to
-  // stay well under either dialect's bind-parameter limits.
-  const CHUNK_SIZE = 400;
-
-  for (let i = 0; i < backup.questionAttempts.length; i += CHUNK_SIZE) {
-    const chunk = backup.questionAttempts.slice(i, i + CHUNK_SIZE);
-
+  // Same shape on the unique (certification_slug, question_id) pair.
+  for (const rows of chunk(backup.questionAttempts)) {
     await db
       .insert(schema.questionAttempts)
-      .values(chunk)
+      .values(rows)
       .onConflictDoUpdate({
         target: [
           schema.questionAttempts.certificationSlug,

@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import { getDatabase } from "@/db/client";
@@ -51,37 +50,31 @@ export async function addCertifications(
 
   const { db, schema } = getDatabase();
 
-  const existing = await db
-    .select()
-    .from(schema.userCertifications)
-    .where(
-      inArray(schema.userCertifications.certificationSlug, certificationSlugs),
-    );
-  const existingBySlug = new Map(
-    existing.map((row) => [row.certificationSlug, row]),
-  );
+  // Deduplicated because the same slug submitted twice would hit the unique
+  // index twice in one statement — which Postgres rejects outright ("ON
+  // CONFLICT DO UPDATE command cannot affect row a second time").
+  const uniqueSlugs = [...new Set(certificationSlugs)];
+  const addedAt = new Date();
 
-  const slugsToInsert = certificationSlugs.filter(
-    (slug) => !existingBySlug.has(slug),
-  );
-  const idsToReactivate = existing
-    .filter((row) => !row.isActive)
-    .map((row) => row.id);
-
-  if (slugsToInsert.length > 0) {
-    await db.insert(schema.userCertifications).values(
-      slugsToInsert.map((slug) => ({
+  // One upsert on the unique certification_slug does both jobs: insert the
+  // new slugs, flip is_active back on for the ones that were removed. It
+  // touches neither the existing row's id nor its addedAt, so attempt history
+  // and original tracking date survive a remove/re-add cycle.
+  await db
+    .insert(schema.userCertifications)
+    .values(
+      uniqueSlugs.map((slug) => ({
         certificationSlug: slug,
+        // Set explicitly: Postgres' defaultNow() is evaluated once per
+        // statement while SQLite's $defaultFn is evaluated once per row, so a
+        // multi-row insert would otherwise drift between the two modes.
+        addedAt,
       })),
-    );
-  }
-
-  if (idsToReactivate.length > 0) {
-    await db
-      .update(schema.userCertifications)
-      .set({ isActive: true })
-      .where(inArray(schema.userCertifications.id, idsToReactivate));
-  }
+    )
+    .onConflictDoUpdate({
+      target: schema.userCertifications.certificationSlug,
+      set: { isActive: true },
+    });
 
   revalidatePath("/dashboard");
 

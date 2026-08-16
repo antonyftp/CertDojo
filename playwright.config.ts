@@ -9,7 +9,12 @@ export default defineConfig({
   testDir: "./e2e",
   use: {
     baseURL: "http://127.0.0.1:3100",
-    trace: "on-first-retry",
+    // Capture unconditionally on failure rather than "on-first-retry": retries
+    // are deliberately left at 0 (a flaky e2e should fail, not be retried into
+    // green), so a retry-gated trace would never be produced at all.
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
   webServer: {
     command: `rm -f ${E2E_SQLITE_PATH} && pnpm db:migrate && pnpm dev --hostname 127.0.0.1 --port 3100`,

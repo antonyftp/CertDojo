@@ -33,6 +33,56 @@ jobs:
 
       - run: pnpm test
 
+      # `tsc --noEmit` does not catch everything a real build does (bundler
+      # errors, client/server import violations, static generation failures),
+      # so the production build is its own gate.
+      - run: pnpm build
+
+  # The app's production mode is Postgres (Vercel/Neon), but every other test
+  # runs on SQLite. This job is the only place the Postgres dialect — the
+  # generated DDL and the upsert shapes used by restore.ts and submitAnswer —
+  # is actually executed. Without TEST_POSTGRES_URL those tests self-skip, so
+  # they only really run here.
+  postgres:
+    name: Postgres dialect tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: certdojo
+          POSTGRES_PASSWORD: certdojo
+          POSTGRES_DB: certdojo_test
+        ports:
+          - 5432:5432
+        # Without this the job can start querying before the server accepts
+        # connections; the service is only reported healthy once pg_isready
+        # succeeds.
+        options: >-
+          --health-cmd "pg_isready -U certdojo -d certdojo_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm vitest run src/db/postgres-dialect.test.ts
+        env:
+          TEST_POSTGRES_URL: postgres://certdojo:certdojo@localhost:5432/certdojo_test
+          # Turns a missing database into a failure instead of a silent skip.
+          REQUIRE_POSTGRES_TESTS: "1"
+
   e2e:
     name: Playwright e2e
     runs-on: ubuntu-latest
@@ -56,5 +106,7 @@ jobs:
         if: failure()
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 7

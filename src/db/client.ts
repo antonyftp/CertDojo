@@ -26,6 +26,16 @@ export type RuntimeMode = "postgres" | "sqlite";
 // Both schemas are structurally identical; business logic is typed against
 // the SQLite flavor and the Postgres instance is cast to it. At runtime each
 // mode uses its own dialect-correct drizzle instance and tables.
+//
+// ⚠️ NEVER CALL `db.transaction()`. This type comes from better-sqlite3, so
+// the method type-checks — but in Postgres mode the object underneath is a
+// neon-http instance, whose session throws
+// "No transactions support in neon-http driver" unconditionally (see
+// node_modules/drizzle-orm/neon-http/session.js). A transaction here would
+// compile, pass every SQLite test, and fail only in production on Vercel.
+// For multi-statement writes: use `db.batch([...])` (neon-http supports it),
+// order the statements so a failure in between leaves a recoverable state, or
+// make each statement idempotent — see completeOnboarding and restoreBackup.
 export type AppDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type AppSchema = typeof sqliteSchema;
 

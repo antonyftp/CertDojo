@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { submitAnswer } from "@/app/(app)/certifications/[slug]/quiz/actions";
+import { SheetOptionRow } from "@/components/sheet-option-row";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +45,17 @@ export function QuestionCard({
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Audit A11Y-02: the session remounts this card on every question (keyed on
+  // question.id), which destroys the focused "Next question" button and drops
+  // focus back to <body> — a keyboard user restarts from the top of the
+  // document each time. Moving focus to the new stem instead both preserves a
+  // sensible tab order and makes a screen reader read the new question
+  // (WCAG 2.4.3). One mount = one question, so a mount effect is the hook.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   function toggleOption(optionId: string) {
     if (feedback || pending) {
@@ -91,12 +103,25 @@ export function QuestionCard({
             Select {question.requiredSelections} answers
           </p>
         ) : null}
-        <h2 className="text-lg leading-relaxed font-medium">
+        <h2
+          id={`question-${question.id}`}
+          ref={headingRef}
+          // Not in the tab order (-1), only a programmatic focus target.
+          tabIndex={-1}
+          className="rounded-sm text-lg leading-relaxed font-medium focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
+        >
           {question.question}
         </h2>
       </div>
 
-      <div className="grid gap-2" role="group" aria-label="Answer options">
+      {/* Audit A11Y-12: the group was labelled with the fixed string "Answer
+          options" on every question. Pointing at the stem instead means a
+          screen reader announces which question these options belong to. */}
+      <div
+        className="grid gap-2"
+        role="group"
+        aria-labelledby={`question-${question.id}`}
+      >
         {question.options.map((option, index) => {
           const letter = String.fromCharCode(97 + index);
           const isSelected = selectedIds.includes(option.id);
@@ -106,56 +131,52 @@ export function QuestionCard({
             ? isSelected && !isCorrectOption
             : false;
 
+          const state = feedback
+            ? isCorrectOption
+              ? "correct"
+              : isWrongSelection
+                ? "incorrect"
+                : "muted"
+            : isSelected
+              ? "selected"
+              : "idle";
+
           return (
-            <label
+            <SheetOptionRow
               key={option.id}
-              className={cn(
-                "flex items-start gap-3 rounded-lg border p-3 transition-colors",
-                "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/60",
-                feedback
-                  ? isCorrectOption
-                    ? "border-mastery/60 bg-mastery/10"
-                    : isWrongSelection
-                      ? "border-destructive/60 bg-destructive/10"
-                      : "border-border opacity-60"
-                  : cn(
-                      "cursor-pointer",
-                      isSelected
-                        ? "border-foreground/60 bg-muted/60"
-                        : "border-border hover:bg-muted/40",
-                    ),
-              )}
+              type={question.multipleAnswers ? "checkbox" : "radio"}
+              name={`answer-${question.id}`}
+              value={option.id}
+              checked={isSelected}
+              disabled={feedback !== null || pending}
+              onChange={() => toggleOption(option.id)}
+              state={state}
+              // Audit A11Y-01: after grading, the result was carried by the
+              // green/red pair alone — the exact pair deuteranopia collapses.
+              // The bubble switches to a ✓/✕ glyph, so the grade survives in
+              // greyscale (WCAG 1.4.1).
+              indicator={
+                state === "correct" ? "✓" : state === "incorrect" ? "✕" : letter
+              }
             >
-              <input
-                type={question.multipleAnswers ? "checkbox" : "radio"}
-                name={`answer-${question.id}`}
-                value={option.id}
-                checked={isSelected}
-                disabled={feedback !== null || pending}
-                onChange={() => toggleOption(option.id)}
-                className="sr-only"
-              />
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "grid size-6 shrink-0 place-items-center rounded-full border font-mono text-xs",
-                  feedback
-                    ? isCorrectOption
-                      ? "border-mastery bg-mastery text-white"
-                      : isWrongSelection
-                        ? "border-destructive bg-destructive text-white"
-                        : "border-muted-foreground/40 text-muted-foreground"
-                    : isSelected
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-muted-foreground/40 text-muted-foreground",
-                )}
-              >
-                {letter}
-              </span>
-              <span className="pt-0.5 text-sm leading-relaxed">
+              <span>
                 {option.text}
+                {/* ...and in the accessible name, since the glyph is
+                    aria-hidden and the inputs are disabled after grading
+                    (WCAG 4.1.2). */}
+                {feedback ? (
+                  <span className="sr-only">
+                    {isCorrectOption
+                      ? isSelected
+                        ? " — Correct answer. You selected this."
+                        : " — Correct answer. You did not select this."
+                      : isWrongSelection
+                        ? " — Incorrect. You selected this."
+                        : " — Not a correct answer."}
+                  </span>
+                ) : null}
               </span>
-            </label>
+            </SheetOptionRow>
           );
         })}
       </div>

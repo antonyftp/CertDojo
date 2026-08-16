@@ -19,7 +19,7 @@ export async function GET() {
 
   return new Response(JSON.stringify(backup, null, 2), {
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json; charset=utf-8",
       "Content-Disposition": `attachment; filename="certdojo-backup-${date}.json"`,
     },
   });

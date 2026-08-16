@@ -4,6 +4,12 @@ import { eq } from "drizzle-orm";
 
 import { getDatabase } from "@/db/client";
 
+// Shared READS only — this is not a data-access façade. Writes live with the
+// feature that owns them (the Server Actions, and lib/backup/restore.ts), and
+// audit ARC-03 concluded that adding a repository layer would not be
+// justified at this size. The name is the only thing that suggested
+// otherwise, hence this note.
+
 // Single-user app (SPECIFICATIONS.md §2): the profile is one row with a
 // fixed id. State is read from the database on each request — no session.
 export const USER_PROFILE_ID = "singleton";

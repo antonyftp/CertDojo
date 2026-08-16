@@ -1,8 +1,5 @@
 import { cn } from "@/lib/utils";
-import {
-  EXAM_READY_THRESHOLD,
-  type DomainProgress,
-} from "@/lib/progress/progress";
+import { type DomainProgress } from "@/lib/progress/progress";
 
 // Signature element (DESIGN.md): a 1:1 miniature of the official exam
 // blueprint. Segment width = the domain's official weight, fill = the user's
@@ -27,7 +24,10 @@ export function BlueprintStrip({
     .join("; ");
 
   return (
-    <div className="grid gap-1">
+    // Container query rather than a viewport breakpoint: the strip appears at
+    // two very different widths (dashboard card vs. detail view), so what
+    // matters is how much room it actually got, not how wide the window is.
+    <div className="@container grid gap-1">
       <div
         role="img"
         aria-label={`Exam blueprint — ${description}`}
@@ -43,23 +43,27 @@ export function BlueprintStrip({
             <div
               className={cn(
                 "h-full",
-                domain.masteryPercent >= EXAM_READY_THRESHOLD * 100
-                  ? "bg-seal"
-                  : "bg-mastery",
+                domain.isExamReady ? "bg-seal" : "bg-mastery",
               )}
               style={{ width: `${domain.masteryPercent}%` }}
             />
           </div>
         ))}
       </div>
+      {/* Audit DS-11: the weight labels were distributed by flex-basis with
+          no minimum width, so a narrow segment (an 8%-weighted domain) or a
+          narrow viewport crushed "8%" into an ellipsis or overflowed the row.
+          The container hides them below the width where they can be read;
+          the strip above stays, and the full breakdown is in its aria-label
+          and in each segment's title either way. */}
       <div
         aria-hidden="true"
-        className="text-muted-foreground flex gap-[3px] font-mono text-[10px]"
+        className="text-muted-foreground @max-[22rem]:hidden flex gap-[3px] font-mono text-2xs"
       >
         {domains.map((domain) => (
           <span
             key={domain.domainId}
-            className="truncate"
+            className="min-w-0 truncate"
             style={{ flexBasis: `${(domain.weight / totalWeight) * 100}%` }}
           >
             {domain.weight}%

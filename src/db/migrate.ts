@@ -12,6 +12,11 @@ const MIGRATIONS = {
   postgres: "src/db/migrations/postgres",
 } as const;
 
+// Documented exception to the "no dialect branching outside client.ts" rule
+// (CLAUDE.md): Drizzle ships one migrator per engine, so the branch below is
+// unavoidable. Note that mode detection itself still happens only in
+// client.ts — this module consumes `getRuntimeMode()` and never reads
+// POSTGRES_URL / DATABASE_URL / SQLITE_PATH.
 export async function runMigrations(): Promise<void> {
   const mode = getRuntimeMode();
   const { db } = getDatabase();

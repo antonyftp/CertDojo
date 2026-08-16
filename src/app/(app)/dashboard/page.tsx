@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
   AddCertificationDialog,
   type ProviderGroup,
 } from "@/components/add-certification-dialog";
-import { BrandLockup } from "@/components/brand";
+import { AppHeader } from "@/components/app-header";
 import {
   CertificationCard,
   MissingContentCard,
@@ -19,7 +20,14 @@ import {
   getCertificationBySlug,
   getQuestions,
 } from "@/lib/content/loader";
+import { DeadEnd } from "@/components/dead-end";
+import { Kicker } from "@/components/kicker";
 import { computeCertificationProgress } from "@/lib/progress/progress";
+
+// Audit A11Y-07: without this the page inherited the generic "CertDojo"
+// title from the root layout, so browser history and tab lists could not
+// tell the app's screens apart (WCAG 2.4.2).
+export const metadata: Metadata = { title: "Dashboard — CertDojo" };
 
 export default async function DashboardPage() {
   // The (app) layout guarantees a completed profile at this point.
@@ -72,37 +80,37 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-dvh">
-      <header className="bg-card border-b">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <BrandLockup />
-          <div className="flex items-center gap-4">
-            <Link
-              href="/settings"
-              className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-widest uppercase"
-            >
-              Settings
-            </Link>
-            <AddCertificationDialog providerGroups={availableGroups} />
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto grid w-full max-w-5xl gap-8 px-6 py-10">
+      <AppHeader homeHref={null}>
+        <Link
+          href="/settings"
+          className="text-muted-foreground hover:text-foreground font-mono text-xs tracking-widest uppercase"
+        >
+          Settings
+        </Link>
+        <AddCertificationDialog providerGroups={availableGroups} />
+      </AppHeader>
+      <main
+        id="main-content"
+        className="mx-auto grid w-full max-w-5xl gap-8 px-6 py-10"
+      >
         <section className="grid gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">
             Welcome back, {profile.name}
           </h1>
           <p className="text-muted-foreground">{profile.jobTitle}</p>
-          <p className="text-muted-foreground mt-2 font-mono text-xs tracking-widest uppercase">
-            {cards.length} certification{cards.length === 1 ? "" : "s"} tracked
-          </p>
+          <Kicker className="mt-2">
+            {`${cards.length} certification${cards.length === 1 ? "" : "s"} tracked`}
+          </Kicker>
         </section>
         {cards.length === 0 ? (
-          <section className="border-border grid place-items-center gap-2 rounded-xl border border-dashed px-6 py-16 text-center">
-            <p className="font-medium">No certifications tracked yet.</p>
-            <p className="text-muted-foreground text-sm">
-              Use “Track certification” above to pick one and start practicing.
-            </p>
-          </section>
+          // The block this empty state established is now shared with the 404
+          // and error screens (DESIGN.md Lot 7 amendment); it uses it too.
+          <DeadEnd
+            kicker="Nothing tracked"
+            title="No certifications tracked yet."
+          >
+            Use “Track certification” above to pick one and start practicing.
+          </DeadEnd>
         ) : (
           <section className="grid gap-4 md:grid-cols-2">
             {cards.map((card) =>

@@ -65,6 +65,7 @@ describe("computeCertificationProgress", () => {
         answeredCount: 0,
         correctCount: 0,
         masteryPercent: 0,
+        isExamReady: false,
       },
       {
         domainId: "beta",
@@ -74,6 +75,7 @@ describe("computeCertificationProgress", () => {
         answeredCount: 0,
         correctCount: 0,
         masteryPercent: 0,
+        isExamReady: false,
       },
     ]);
   });
@@ -141,6 +143,41 @@ describe("computeCertificationProgress", () => {
     ]);
     // 4/5 = 80% >= 80%
     expect(atThreshold.status).toBe("exam-ready");
+  });
+
+  it("does not let a domain round its way into exam-ready", () => {
+    // 199/250 = 79.6%, which toPercent rounds to 80. A domain sealed off the
+    // rounded percent would show as exam-ready below the threshold, so
+    // isExamReady must be derived from the exact ratio.
+    const bankMeta: CertificationMeta = {
+      ...meta,
+      domains: [{ id: "alpha", name: "Alpha", weight: 100 }],
+    };
+    const bank = Array.from({ length: 250 }, (_, index) =>
+      question(`q${index}`, "alpha"),
+    );
+    const attempts = bank.map((item, index) => attempt(item.id, index < 199));
+
+    const progress = computeCertificationProgress(bankMeta, bank, attempts);
+    const [domain] = progress.domains;
+
+    expect(domain.masteryPercent).toBe(80);
+    expect(domain.isExamReady).toBe(false);
+    // The certification-level status already compared the exact ratio; the
+    // two must agree.
+    expect(progress.status).toBe("in-progress");
+  });
+
+  it("seals a domain once the exact ratio reaches the threshold", () => {
+    const progress = computeCertificationProgress(meta, questions, [
+      attempt("q1", true),
+      attempt("q2", true),
+      attempt("q3", true),
+      attempt("q4", true),
+      attempt("q5", true),
+    ]);
+
+    expect(progress.domains.every((domain) => domain.isExamReady)).toBe(true);
   });
 
   it("ignores attempts for questions no longer present in the bank", () => {

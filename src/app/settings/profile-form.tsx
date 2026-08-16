@@ -20,28 +20,37 @@ export function ProfileForm({
     status: "idle" as const,
   });
 
+  // Pulled out of the JSX: the same four-clause narrowing was repeated for
+  // every field and every error paragraph.
+  const fieldErrors =
+    state.status === "error" && "fieldErrors" in state
+      ? state.fieldErrors
+      : undefined;
+  const nameError = fieldErrors?.name;
+  const jobTitleError = fieldErrors?.jobTitle;
+
   return (
-    <form action={formAction} className="grid gap-4">
+    // noValidate: `required` announces the state, the server owns the
+    // messages — same reasoning as the onboarding form (audit A11Y-09).
+    <form action={formAction} noValidate className="grid gap-4">
       <div className="grid gap-2">
         <Label htmlFor="profile-name">Name</Label>
         <Input
           id="profile-name"
           name="name"
+          required
           autoComplete="name"
           defaultValue={initialName}
-          aria-invalid={
-            state.status === "error" &&
-            "fieldErrors" in state &&
-            state.fieldErrors?.name
-              ? true
-              : undefined
-          }
+          aria-invalid={nameError ? true : undefined}
+          aria-describedby={nameError ? "profile-name-error" : undefined}
         />
-        {state.status === "error" &&
-        "fieldErrors" in state &&
-        state.fieldErrors?.name ? (
-          <p className="text-destructive text-sm" role="alert">
-            {state.fieldErrors.name}
+        {nameError ? (
+          <p
+            id="profile-name-error"
+            className="text-destructive text-sm"
+            role="alert"
+          >
+            {nameError}
           </p>
         ) : null}
       </div>
@@ -50,21 +59,21 @@ export function ProfileForm({
         <Input
           id="profile-job-title"
           name="jobTitle"
+          required
           autoComplete="organization-title"
           defaultValue={initialJobTitle}
-          aria-invalid={
-            state.status === "error" &&
-            "fieldErrors" in state &&
-            state.fieldErrors?.jobTitle
-              ? true
-              : undefined
+          aria-invalid={jobTitleError ? true : undefined}
+          aria-describedby={
+            jobTitleError ? "profile-job-title-error" : undefined
           }
         />
-        {state.status === "error" &&
-        "fieldErrors" in state &&
-        state.fieldErrors?.jobTitle ? (
-          <p className="text-destructive text-sm" role="alert">
-            {state.fieldErrors.jobTitle}
+        {jobTitleError ? (
+          <p
+            id="profile-job-title-error"
+            className="text-destructive text-sm"
+            role="alert"
+          >
+            {jobTitleError}
           </p>
         ) : null}
       </div>
@@ -73,9 +82,15 @@ export function ProfileForm({
           {state.message}
         </p>
       ) : null}
+      {/* Audit DS-06: this was raw Tailwind green-600/green-400 while
+          import-form.tsx used the --mastery token for the same kind of success
+          line — two different greens on one page. */}
       {state.status === "success" ? (
-        <p className="text-sm text-green-600 dark:text-green-400" role="status">
-          Profile updated.
+        <p
+          className="text-mastery font-mono text-xs tracking-widest uppercase"
+          role="status"
+        >
+          ✓ Profile updated
         </p>
       ) : null}
       <div>

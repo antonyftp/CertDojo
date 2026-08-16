@@ -3,67 +3,69 @@
 
 /* Palette and typography are defined in DESIGN.md (SPECIFICATIONS.md §6.2):
    answer-sheet paper, pencil graphite, scantron blue (interactive only),
-   score-report green/red, credential-seal gold. Dark mode follows the OS
-   preference for now; the explicit light/dark toggle (spec §6.1) ships with
-   the settings screen. */
+   score-report green/red, credential-seal gold.
 
+   Theme resolution has three states — System, Light, Dark (audit DS-01,
+   DESIGN.md Lot 9 amendment). Dark values used to live only inside a
+   prefers-color-scheme media query, which left an explicit choice nowhere to
+   attach. They are now carried by `light-dark()` on each token, so the
+   palette is declared exactly once and the three states are three values of
+   the `color-scheme` property. */
+
+/* One declaration per token, both values in it: `light-dark()` resolves
+   against the used colour scheme, and `color-scheme` is what the three
+   states actually set. No duplicated palette, and no media query — the OS
+   preference arrives through `color-scheme: light dark`. */
 :root {
+  color-scheme: light dark;
+
   --radius: 0.625rem;
-  --background: #f5f7fa;
-  --foreground: #232830;
-  --card: #ffffff;
-  --card-foreground: #232830;
-  --popover: #ffffff;
-  --popover-foreground: #232830;
-  --primary: #2f5ea8;
-  --primary-foreground: #f8fafc;
-  --secondary: #e7ecf2;
-  --secondary-foreground: #232830;
-  --muted: #ecf0f4;
-  --muted-foreground: #5b6472;
-  --accent: #e1e9f4;
-  --accent-foreground: #1f3a6e;
-  --destructive: #b3372b;
-  --border: #d8dee6;
-  --input: #d8dee6;
-  --ring: #2f5ea8;
-  --mastery: #1e7a4e;
-  --seal: #a87b1f;
-  --chart-1: #2f5ea8;
-  --chart-2: #1e7a4e;
-  --chart-3: #a87b1f;
-  --chart-4: #b3372b;
-  --chart-5: #5b6472;
+  --background: light-dark(#f5f7fa, #14171d);
+  --foreground: light-dark(#232830, #e8ebf0);
+  --card: light-dark(#ffffff, #1c2027);
+  --card-foreground: light-dark(#232830, #e8ebf0);
+  --popover: light-dark(#ffffff, #232833);
+  --popover-foreground: light-dark(#232830, #e8ebf0);
+  --primary: light-dark(#2f5ea8, #8aaee8);
+  --primary-foreground: light-dark(#f8fafc, #101b30);
+  --secondary: light-dark(#e7ecf2, #262c36);
+  --secondary-foreground: light-dark(#232830, #e8ebf0);
+  --muted: light-dark(#ecf0f4, #262c36);
+  --muted-foreground: light-dark(#5b6472, #98a2b0);
+  --accent: light-dark(#e1e9f4, #2a3547);
+  --accent-foreground: light-dark(#1f3a6e, #c9d9f2);
+  --destructive: light-dark(#b3372b, #e0604f);
+  /* Audit A11Y-05: the light value measured 1.35:1 on --card and 1.26:1 on
+     --background, and the dark one (white at 10-14%) 1.35:1 / 1.55:1, against
+     the 3:1 minimum of WCAG 1.4.11 for the boundary of a UI component. Now
+     3.35:1 / 3.12:1 light and 3.2:1 dark, hue preserved on both sides. */
+  --border: light-dark(#868d96, rgb(255 255 255 / 36%));
+  --input: light-dark(#868d96, rgb(255 255 255 / 36%));
+  --ring: light-dark(#2f5ea8, #6e93d4);
+  --mastery: light-dark(#1e7a4e, #41a97a);
+  /* Audit A11Y-06: the light seal is used as 10px text on bg-seal/15, where
+     #a87b1f measured 3.21:1 against the 4.5:1 required at that size. Deepened
+     to 4.94:1 on the tint (6.10:1 on --card). The dark value was already at
+     7.42:1 and is unchanged. */
+  --seal: light-dark(#7f5c15, #d3a945);
+  --chart-1: light-dark(#2f5ea8, #8aaee8);
+  --chart-2: light-dark(#1e7a4e, #41a97a);
+  --chart-3: light-dark(#a87b1f, #d3a945);
+  --chart-4: light-dark(#b3372b, #e0604f);
+  --chart-5: light-dark(#5b6472, #98a2b0);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #14171d;
-    --foreground: #e8ebf0;
-    --card: #1c2027;
-    --card-foreground: #e8ebf0;
-    --popover: #232833;
-    --popover-foreground: #e8ebf0;
-    --primary: #8aaee8;
-    --primary-foreground: #101b30;
-    --secondary: #262c36;
-    --secondary-foreground: #e8ebf0;
-    --muted: #262c36;
-    --muted-foreground: #98a2b0;
-    --accent: #2a3547;
-    --accent-foreground: #c9d9f2;
-    --destructive: #e0604f;
-    --border: rgb(255 255 255 / 10%);
-    --input: rgb(255 255 255 / 14%);
-    --ring: #6e93d4;
-    --mastery: #41a97a;
-    --seal: #d3a945;
-    --chart-1: #8aaee8;
-    --chart-2: #41a97a;
-    --chart-3: #d3a945;
-    --chart-4: #e0604f;
-    --chart-5: #98a2b0;
-  }
+/* The two explicit choices. `data-theme` is written on <html> server-side
+   from a cookie (see src/lib/theme), so the correct palette is in the very
+   first paint and no client-side theme script is needed. With no attribute
+   at all, `color-scheme: light dark` above follows the OS — which is what
+   makes "System" a real third state. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @theme {
@@ -72,6 +74,12 @@
     sans-serif;
   --font-mono:
     "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Audit DS-08: the smallest label size was written as an arbitrary
+     ten-pixel value in eight places, with no typographic scale declared here
+     at all. Named so it can be governed. */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1rem;
 }
 
 @theme inline {
@@ -112,5 +120,21 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Audit A11Y-14: nothing in the app honoured a reduced-motion preference,
+     and tw-animate-css (which powers the dialog's zoom and fade) ships no
+     such guard of its own. WCAG 2.3.3. Animations are not removed — they are
+     collapsed to a single frame, so state changes still land instantly
+     without anything moving. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

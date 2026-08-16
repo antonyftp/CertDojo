@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -8,6 +9,7 @@ import { getDatabase } from "@/db/client";
 import { USER_PROFILE_ID } from "@/db/queries";
 import { restoreBackup } from "@/lib/backup/restore";
 import { backupFileSchema } from "@/lib/backup/schema";
+import { isThemePreference, THEME_COOKIE } from "@/lib/theme";
 
 const profileSchema = z.object({
   name: z
@@ -63,8 +65,11 @@ export async function updateProfile(
     };
   }
 
+  // Audit FE-06: only these two screens show the name and job title.
+  // The previous revalidatePath("/", "layout") also dropped every
+  // /certifications/* entry, which a profile edit cannot affect.
   revalidatePath("/settings");
-  revalidatePath("/", "layout");
+  revalidatePath("/dashboard");
 
   return { status: "success" };
 }
@@ -79,8 +84,10 @@ export type ImportState =
     };
 
 // A backup is a handful of small tables; anything bigger than this is not a
-// CertDojo export.
-const MAX_IMPORT_BYTES = 10 * 1024 * 1024;
+// CertDojo export. Must stay below `serverActions.bodySizeLimit` in
+// next.config.ts (4MB), otherwise Next rejects the request with a generic
+// framework error before this friendlier check ever runs.
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
 
 // Import half of SPECIFICATIONS.md §5.5: the whole file is validated before
 // the first write, so a malformed file never touches the database.
@@ -124,7 +131,22 @@ export async function importUserData(
     };
   }
 
-  await restoreBackup(parsed.data);
+  // An uncaught throw here would escape the Server Action as a generic Next
+  // error — and skip the revalidate below, leaving the UI showing stale data
+  // over a database that may have partially changed. Every write in
+  // restoreBackup is an idempotent upsert, so retrying the same file is safe
+  // and is the right advice to give.
+  try {
+    await restoreBackup(parsed.data);
+  } catch (error) {
+    console.error("Backup import failed", error);
+
+    return {
+      status: "error",
+      message:
+        "The import failed while writing to the database. Your data may be partially updated — importing the same file again is safe and will finish the job.",
+    };
+  }
 
   // Every screen derives from the data that just changed (including the
   // onboarding gate in the (app) layout).
@@ -135,4 +157,29 @@ export async function importUserData(
     certifications: parsed.data.userCertifications.length,
     attempts: parsed.data.questionAttempts.length,
   };
+}
+
+// Theme preference (audit DS-01). A Server Action writing a cookie, so the
+// control works with JavaScript disabled like every other write in the app.
+// No validation errors to report: the value comes from a fixed radio group
+// and anything else is simply rejected.
+export async function setTheme(formData: FormData): Promise<void> {
+  const value = formData.get("theme");
+
+  if (!isThemePreference(value)) {
+    return;
+  }
+
+  (await cookies()).set(THEME_COOKIE, value, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    // A year: this is a preference, not a session.
+    maxAge: 60 * 60 * 24 * 365,
+  });
+
+  // The attribute is written by the root layout, so every route's HTML
+  // changes — this is the one case where invalidating the whole tree is
+  // exactly right.
+  revalidatePath("/", "layout");
 }

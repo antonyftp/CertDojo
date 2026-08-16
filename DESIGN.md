@@ -391,3 +391,157 @@ toast notifications. What differs and why:
    records office is precisely where a transferring candidate goes first.
    Checked against the three banned defaults: still no cream/serif/
    terracotta, no acid-on-black, no broadsheet hairlines.
+
+## Lot 7 amendment — interstitial and dead-end states (loading / not found / error)
+
+Audit findings FE-03 and FE-04: the app had no `loading.tsx`, no `error.tsx`
+and no `not-found.tsx`, so every route rendered nothing until its database
+reads finished, and `notFound()` — called in three places — fell through to
+Next's unstyled default page. These are the last three screens a user can
+land on that had no design at all.
+
+In the exam-artifact language the rest of the app speaks:
+
+- **Loading** is *the answer sheet before it goes through the scanner*: the
+  form is already printed, only the marks are unread. So the fallback is the
+  real page's own skeleton — same header, same column, same card grid — with
+  the data cells left blank, not a spinner over an empty viewport.
+- **Not found** is *the records office coming back from the filing cabinet
+  empty-handed*: `NO RECORD` in mono, one plain sentence, one way back.
+- **Error** is *the scanner jamming mid-batch*: flag red, one retry, and the
+  error digest presented as a reference number — which is exactly what a test
+  center hands you when something goes wrong with your result.
+
+### Layout
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ CERTDOJO///                                        ← Dashboard │
+├────────────────────────────────────────────────────────────────┤
+│ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐  │
+│ │ 404 · NO RECORD                          (mono kicker)    │  │
+│ │ This page does not exist.                                 │  │
+│ │ The certification may have been removed from /content.    │  │
+│ │                                     [Back to dashboard]   │  │
+│ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘  │
+└────────────────────────────────────────────────────────────────┘
+```
+
+Decisions:
+
+- **The dashed-border block is not a new pattern.** The dashboard's "No
+  certifications tracked yet" empty state already established it. Not found
+  and error reuse it verbatim, so all three "nothing here" moments in the app
+  are visibly the same object.
+- **Skeletons mirror the real layout, cell for cell** (header, kicker, card
+  grid, blueprint strip), so the shell does not shift when data arrives. The
+  blueprint skeleton keeps its **segments but drops its fills** — an unscanned
+  sheet, which is literally what the state is.
+- **No new decorative element.** The blueprint strip is the app's only
+  signature element and nothing here is allowed to compete with it.
+- **The error digest is shown, in mono**, when Next provides one. A user
+  reporting a bug on a self-hosted app is their own support desk; hiding the
+  one identifier that matches a server log would be politeness at the cost of
+  usefulness.
+- **`error.tsx` sits at the app root, not inside `(app)`** as the audit
+  suggested. A root boundary also covers `/settings` and `/onboarding`, and —
+  because an error file wraps its *child* segments — it catches the
+  `getUserProfile()` read in `(app)/layout.tsx`, which is the single most
+  likely thing to fail when the database is unreachable. One file, strictly
+  more coverage.
+
+### Critique (per §6.2)
+
+*Default answer for these three screens*: a centered spinner ring, a giant
+gradient "404" numeral, a sad-face or broken-robot illustration, "Oops!
+Something went wrong 😕", and a toast. What differs and why:
+
+1. **No spinner anywhere.** A spinner communicates "wait" and nothing else; a
+   skeleton of the actual page communicates what is coming and holds its
+   space. The app already refuses spinner theater for the export download
+   (Step 7 amendment) — same reasoning.
+2. **No apology copy and no mascot.** The records-office voice states the
+   fact ("No record found") and offers the one action that helps. This is a
+   revision tool for adults preparing an exam, not a consumer app performing
+   contrition.
+3. **Reuses the established empty-state block** rather than inventing a
+   third visual language for failure — the strongest argument available is
+   that these screens should look like they were always part of the app.
+4. Checked against the three banned defaults: no cream/serif/terracotta, no
+   acid-on-black, no broadsheet hairlines.
+
+### Known limit
+
+`loading.tsx` only appears once the layout above it has resolved. `(app)/
+layout.tsx` awaits `getUserProfile()` before rendering any child, so on a
+slow database the first paint still waits for that one query. Moving the
+header into the layout and wrapping the content in `<Suspense>` — the audit's
+"à terme" suggestion — is what would remove that last block; it is not done
+here because the header is still duplicated across four pages (DS-05, Lot 9).
+
+## Lot 9 amendment — theme control and the shared primitives
+
+Two things happen in this lot. The design-system findings (DS-02 → DS-11) are
+extractions of patterns already on screen — a shared header, a status badge, a
+kicker, the answer-sheet option row — and change nothing visually except where
+a token was being contradicted. The one genuinely new surface is the theme
+control, which `globals.css` has promised in a comment since Step 4 and
+`SPECIFICATIONS.md` §6.1 requires.
+
+### Appearance control
+
+The control is a **third card on `/settings`**, named `APPEARANCE` in the same
+records-office mono kicker as `CANDIDATE`, `EXPORT`, `IMPORT`. Three choices,
+not a two-state switch: **System · Light · Dark**. "System" has to be a real,
+selectable, *default* option — a binary toggle silently overrides the OS
+preference the app has honoured until now, which is a regression for anyone
+who set it deliberately.
+
+```
+┌ APPEARANCE ───────────────────────────────────────────────┐
+│ ○ SYSTEM     Follows your operating system.               │
+│ ● LIGHT      Answer-sheet paper.                          │
+│ ○ DARK       Graphite.                                    │
+└───────────────────────────────────────────────────────────┘
+```
+
+Decisions:
+
+- **The rows are the answer-sheet option row** — the same primitive as the
+  quiz's batch picker and its question options (DS-09). The app has exactly
+  one way to present a choice, and this is it.
+- **State lives in a cookie, applied server-side**, not in `localStorage`
+  applied by a blocking inline script. Three reasons: no flash of the wrong
+  theme on first paint, no `dangerouslySetInnerHTML` (the audit records the
+  repo as having none, and this is not the feature worth spending that on),
+  and the toggle **works with JavaScript disabled** — it is a Server Action
+  and a form, like every other write in the app. The cost is that the root
+  layout becomes dynamic, which changes nothing in practice: every real page
+  is already `force-dynamic`.
+- **No toggle in the top bar.** Theme is set once and forgotten; putting it in
+  the header of every screen would spend permanent chrome on a one-time
+  decision, and the header is the app's quietest surface by design.
+
+### Token restructuring
+
+Dark values lived only under `@media (prefers-color-scheme: dark)`, so an
+explicit choice had nowhere to attach. They now live in one shared block
+applied by two selectors — `@media (prefers-color-scheme: dark)` scoped to
+`:root:not([data-theme="light"])`, and `:root[data-theme="dark"]`. The light
+palette stays on bare `:root`. This is what makes "System" a real third state
+rather than a synonym for one of the other two: with no attribute set, the
+media query decides; with an attribute, it wins in both directions.
+
+### Critique (per §6.2)
+
+*Default answer*: a sun/moon icon button in the header that flips between two
+states, animated, storing to `localStorage`. What differs and why:
+
+1. **Three states, not two**, so the OS preference remains reachable — and
+   remains the default, which is the behaviour the app already had.
+2. **A form, not a widget.** Progressive enhancement is a property this
+   codebase has consistently (four forms, a plain download link); a theme
+   control that breaks without JavaScript would be the first thing that does.
+3. **No icon-only affordance.** The app has no icon-button vocabulary; adding
+   one for a single setting would be a new pattern for a single use.
+4. Checked against the three banned defaults: unchanged.

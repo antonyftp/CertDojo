@@ -148,6 +148,7 @@ pnpm lint
 pnpm format:check       # or pnpm format to fix
 pnpm typecheck
 pnpm test               # Vitest unit/integration tests
+pnpm test:watch         # same, in watch mode while you iterate
 pnpm test:e2e           # Playwright (once: pnpm exec playwright install --with-deps chromium)
 pnpm validate-content
 ```
@@ -155,8 +156,9 @@ pnpm validate-content
 CI (`.github/workflows/ci.yml`) runs all of the above on every PR.
 
 Architecture notes for contributors live in [`CLAUDE.md`](CLAUDE.md) and the
-full product spec in [`SPECIFICATIONS.md`](SPECIFICATIONS.md). Two rules that
-trip people up:
+full product spec in [`SPECIFICATIONS.md`](SPECIFICATIONS.md) — see §4.4 there
+for the directory layout as actually built (application code lives under
+`src/`). Two rules that trip people up:
 
 - Database mode detection (SQLite vs Postgres) lives **only** in
   `src/db/client.ts` — no other module may read those env vars or reference a
