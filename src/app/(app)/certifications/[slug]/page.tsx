@@ -22,10 +22,10 @@ export async function generateMetadata({
   return { title: meta ? `${meta.examCode} — CertDojo` : "CertDojo" };
 }
 
-// Certification detail view (DEV_PLAN_V1.md Step 6): the full score report
-// for one certification — the blueprint strip enlarged as the anchor, then
+// Certification detail view: the full score report for one certification —
+// the blueprint strip enlarged as the anchor, then
 // the domain-by-domain breakdown table with a per-domain practice launcher
-// (DESIGN.md Step 6 amendment).
+// (DESIGN.md "certification detail view").
 export default async function CertificationDetailPage({
   params,
 }: PageProps<"/certifications/[slug]">) {

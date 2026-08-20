@@ -1,38 +1,22 @@
 // @vitest-environment node
 //
-// Postgres-DIALECT regression test (audit TST-01: no test today exercises
-// Postgres, which is the Vercel/prod mode).
+// The only place the production DIALECT actually executes. Applies the real
+// migrations under src/db/migrations/postgres against a live Postgres, then
+// replays the upsert shapes used in production (composite
+// onConflictDoUpdate targets, sql`excluded.<col>`, sql`<col> + 1`) so a
+// dialect-breaking change fails here instead of only on Vercel.
 //
-// What this file covers: applies the real migrations under
-// src/db/migrations/postgres against a live Postgres, then re-runs the
-// same shapes of upsert used in production code so a dialect-breaking SQL
-// change (composite onConflictDoUpdate targets, sql`excluded.<col>`,
-// sql`<col> + 1`, the generated DDL itself) fails here instead of only
-// showing up on Vercel:
-//   - src/lib/backup/restore.ts: userProfile upsert (single-column target,
-//     `excluded.*`) and questionAttempts upsert (composite target,
-//     `excluded.*`, chunking-shaped repeat writes).
-//   - src/app/(app)/certifications/[slug]/quiz/actions.ts: questionAttempts
-//     upsert via `sql`${column} + 1`` (composite target, arithmetic SET).
+// It is a proxy for the SQL dialect ONLY. Production uses
+// @neondatabase/serverless via drizzle-orm/neon-http, which speaks HTTP to a
+// Neon endpoint and cannot reach a plain `postgres:16` service in CI, so this
+// file uses `pg` + drizzle-orm/node-postgres (devDependencies, never imported
+// from src/). Consequently it does NOT cover: neon-http's lack of transaction
+// support (pg.Pool has them, so transactional differences pass silently
+// here), its pooling/retry/cold-start behaviour, or getRuntimeMode() /
+// getDatabase(), which this file bypasses entirely.
 //
-// What this file deliberately does NOT cover: the actual production driver
-// is @neondatabase/serverless via drizzle-orm/neon-http, which speaks HTTP
-// to a Neon endpoint and cannot connect to a plain `postgres:16` service in
-// CI (see the arbitration note in DEV_PLAN_V1.md / the audit). This file
-// uses `pg` + drizzle-orm/node-postgres instead — both devDependencies,
-// never imported from src/ — as a close proxy for the SQL dialect only.
-// In particular, none of the following is exercised here:
-//   - neon-http has no multi-statement transaction support (every query is
-//     its own HTTP round trip); this file's `pg.Pool` DOES support
-//     transactions, so transactional behavior differences are NOT caught.
-//   - neon-http's connection pooling, retry, and cold-start behavior.
-//   - getRuntimeMode()/getDatabase() in src/db/client.ts are not invoked at
-//     all: this file talks to Postgres directly, deliberately bypassing the
-//     app's runtime mode detection (which is neon-http-only).
-//
-// Skipped automatically unless TEST_POSTGRES_URL is set, so `pnpm test`
-// stays fast and Docker-free locally. CI provides it via the dedicated
-// `postgres` job in .github/workflows/ci.yml (a postgres:16 service).
+// Skipped unless TEST_POSTGRES_URL is set, so `pnpm test` stays fast and
+// Docker-free locally. CI provides it via the dedicated `postgres` job.
 
 import { eq, sql } from "drizzle-orm";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -178,10 +162,8 @@ describe.skipIf(!TEST_POSTGRES_URL)("postgres dialect", () => {
   it("gives every row of a multi-row insert the same defaultNow(), which is why added_at is set explicitly", async () => {
     const { userCertifications } = postgresSchema;
 
-    // Pins the dialect divergence the write paths compensate for: Postgres
-    // evaluates defaultNow() once per STATEMENT, while SQLite's $defaultFn
-    // runs once per ROW. Relying on the default would therefore order rows
-    // differently in the two modes.
+    // Pins the defaultNow()-per-statement divergence the write paths
+    // compensate for (see src/db/client.ts).
     await db
       .insert(userCertifications)
       .values([

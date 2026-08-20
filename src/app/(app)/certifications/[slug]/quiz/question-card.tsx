@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // The client-safe slice of a question: no correctOptionIds, no explanation —
-// those only ever arrive in the submitAnswer response (DESIGN.md Step 5).
+// those only ever arrive in the submitAnswer response (DESIGN.md "quiz
+// session screens").
 export type SessionQuestion = {
   id: string;
   domainName: string;
@@ -47,12 +48,10 @@ export function QuestionCard({
   const [pending, startTransition] = useTransition();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  // Audit A11Y-02: the session remounts this card on every question (keyed on
-  // question.id), which destroys the focused "Next question" button and drops
-  // focus back to <body> — a keyboard user restarts from the top of the
-  // document each time. Moving focus to the new stem instead both preserves a
-  // sensible tab order and makes a screen reader read the new question
-  // (WCAG 2.4.3). One mount = one question, so a mount effect is the hook.
+  // The session remounts this card per question (keyed on question.id), which
+  // would otherwise drop focus to <body> and restart a keyboard user at the
+  // top of the document. Focusing the new stem preserves tab order and makes a
+  // screen reader read the question (WCAG 2.4.3). One mount = one question.
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
@@ -114,9 +113,8 @@ export function QuestionCard({
         </h2>
       </div>
 
-      {/* Audit A11Y-12: the group was labelled with the fixed string "Answer
-          options" on every question. Pointing at the stem instead means a
-          screen reader announces which question these options belong to. */}
+      {/* Labelled by the stem rather than a fixed string, so a screen reader
+          announces which question these options belong to. */}
       <div
         className="grid gap-2"
         role="group"
@@ -151,10 +149,9 @@ export function QuestionCard({
               disabled={feedback !== null || pending}
               onChange={() => toggleOption(option.id)}
               state={state}
-              // Audit A11Y-01: after grading, the result was carried by the
-              // green/red pair alone — the exact pair deuteranopia collapses.
-              // The bubble switches to a ✓/✕ glyph, so the grade survives in
-              // greyscale (WCAG 1.4.1).
+              // A ✓/✕ glyph, not green/red alone — the exact pair
+              // deuteranopia collapses. The grade survives greyscale
+              // (WCAG 1.4.1).
               indicator={
                 state === "correct" ? "✓" : state === "incorrect" ? "✕" : letter
               }

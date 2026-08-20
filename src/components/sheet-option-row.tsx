@@ -7,10 +7,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 // The answer-sheet option row (DESIGN.md): a full-width label wrapping a
-// visually hidden input, with the bubble as the only state indicator. Audit
-// DS-09 found this skeleton reimplemented twice, character for character down
-// to the has-[:focus-visible] ring. It now has three consumers: the quiz's
-// question options, its batch picker, and the appearance control.
+// visually hidden input, with the bubble as the only state indicator. Three
+// consumers: the quiz's question options, its batch picker, and the
+// appearance control.
 //
 // The input stays a real <input type="radio"|"checkbox">, so keyboard
 // behaviour, form submission, and the accessibility tree are the browser's

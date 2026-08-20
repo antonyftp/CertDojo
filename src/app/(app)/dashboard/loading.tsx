@@ -2,11 +2,10 @@ import { BrandLockup } from "@/components/brand";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Audit FE-03. The skeleton mirrors the real dashboard cell for cell — same
-// header, same max-w-5xl column, same two-column card grid — so nothing
-// shifts when the data lands. The blueprint strip keeps its segments and
-// drops its fills: an answer sheet that has not been scanned yet
-// (DESIGN.md Lot 7 amendment).
+// Mirrors the real dashboard cell for cell — same header, same max-w-5xl
+// column, same two-column card grid — so nothing shifts when the data lands.
+// The blueprint strip keeps its segments and drops its fills: an answer sheet
+// that has not been scanned yet (DESIGN.md "dead-end states").
 function CertificationCardSkeleton() {
   return (
     <Card>

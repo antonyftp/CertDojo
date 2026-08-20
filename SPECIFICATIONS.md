@@ -238,7 +238,7 @@ No points, levels, or streaks system: only percentages and counters derived from
 
 ### 6.2 Design direction (avoiding generic AI-generated UI)
 
-Before building any UI (starting at Step 4 of the dev plan, and applied consistently for every screen after), produce a short design plan and have it critiqued before writing component code. This applies to every screen built afterward, not just the first one.
+Before building any UI, produce a short design plan and have it critiqued before writing component code. This applies to every screen, not just the first one.
 
 **Design plan, required before implementation:**
 - **Palette**: 4–6 named hex values, each justified by CertDojo's actual subject matter (certification exams, technical study, mastery tracking) — not a generic "clean dashboard" palette.

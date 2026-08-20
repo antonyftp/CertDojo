@@ -7,7 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 CertDojo is an open-source, single-user (zero auth) Next.js 16 App Router app for practicing tech certification MCQs. Reference documents, in order of authority:
 
 - `SPECIFICATIONS.md` — the requirements (§ references throughout the code point here).
-- `DEV_PLAN_V1.md` — the V1 build plan, **all 10 steps complete**. Now a historical record of why things are the way they are, not a queue of work.
 - `DESIGN.md` — the accumulated design plans and self-critiques (one section per screen, per §6.2). Every UI change adds to it.
 - `CONTRIBUTING.md` / `README.md` — contributor- and user-facing docs; keep them true when behaviour changes.
 
@@ -17,7 +16,7 @@ CertDojo is an open-source, single-user (zero auth) Next.js 16 App Router app fo
 - Flag spec problems/ambiguities to the user instead of making silent choices.
 - Install dependencies at `@latest`; Next 16 / React 19 / Tailwind 4 are the minimum floor — never pin older versions from training data.
 - Before building any UI: produce and self-critique a design plan per `SPECIFICATIONS.md` §6.2 (palette, typography, layout, signature element), append it to `DESIGN.md`, and only then write component code. Avoid the generic AI-design defaults listed there.
-- If a new step-by-step plan document is introduced (as `DEV_PLAN_V1.md` was): do **one step per run**, then summarize, verify the step's validation criteria, tick its checkbox in both the overview and the step heading, and **stop for explicit user validation**.
+- If a step-by-step plan document is introduced: do **one step per run**, then summarize, verify the step's validation criteria, tick its checkbox in both the overview and the step heading, and **stop for explicit user validation**.
 - Whatever the change, the gates it must survive are the CI ones: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm validate-content`, `pnpm test`, `pnpm build`, `pnpm test:e2e`.
 
 ## Commands

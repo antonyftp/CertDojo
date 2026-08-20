@@ -1,7 +1,7 @@
 import { BrandLockup } from "@/components/brand";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Audit FE-03. Mirrors the detail view's max-w-3xl column: identity block,
+// Mirrors the detail view's max-w-3xl column: identity block,
 // the enlarged blueprint strip that anchors the screen, then the domain
 // breakdown rows.
 export default function CertificationDetailLoading() {

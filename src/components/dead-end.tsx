@@ -5,7 +5,7 @@ import { BrandLockup } from "@/components/brand";
 import { cn } from "@/lib/utils";
 
 // The three "nothing here" moments — empty dashboard, not found, error —
-// share one block (DESIGN.md Lot 7 amendment): a dashed rule, a mono kicker,
+// share one block (DESIGN.md "dead-end states"): a dashed rule, a mono kicker,
 // a plain statement, and at most one way out. The dashed border is the same
 // pattern the dashboard's empty state established.
 export function DeadEnd({
@@ -49,9 +49,8 @@ export function DeadEnd({
   );
 }
 
-// Minimal top bar for screens that render outside a normal page's data (not
-// found, error): the lockup and a single way back. The four data screens keep
-// their own richer headers until DS-05 extracts a shared <AppHeader>.
+// Top bar for the screens that render outside a normal page's data (not
+// found, error): the lockup and a single way back.
 export function DeadEndHeader({
   backHref = "/dashboard",
   backLabel = "Dashboard",

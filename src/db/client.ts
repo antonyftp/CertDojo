@@ -36,6 +36,14 @@ export type RuntimeMode = "postgres" | "sqlite";
 // For multi-statement writes: use `db.batch([...])` (neon-http supports it),
 // order the statements so a failure in between leaves a recoverable state, or
 // make each statement idempotent — see completeOnboarding and restoreBackup.
+//
+// Two other divergences every multi-row write has to compensate for:
+//   - Postgres evaluates defaultNow() once per STATEMENT, SQLite's $defaultFn
+//     once per ROW. Pass timestamps explicitly, or rows ordered by the column
+//     will differ between the two modes.
+//   - Postgres rejects an upsert whose values hit the same conflict target
+//     twice in one statement ("ON CONFLICT DO UPDATE command cannot affect
+//     row a second time"), so deduplicate the values first.
 export type AppDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type AppSchema = typeof sqliteSchema;
 
@@ -61,8 +69,7 @@ function createDatabase(): { db: AppDatabase; schema: AppSchema } {
   }
 
   // On Vercel the filesystem is read-only and SQLite cannot work: fail with
-  // a clear message instead of attempting the write below (DEV_PLAN_V1.md
-  // Step 9).
+  // a clear message instead of attempting the write below.
   if (process.env.VERCEL) {
     throw new Error(
       "CertDojo is running on Vercel without a Postgres database. " +

@@ -35,18 +35,14 @@ export type ProviderGroup = {
   certifications: CertificationChoice[];
 };
 
-// Adds tracked certifications from the dashboard without re-running
-// onboarding (SPECIFICATIONS.md §5.2). `providerGroups` only contains
-// certifications not currently tracked.
+// `providerGroups` only contains certifications not currently tracked; the
+// write itself is in ../app/(app)/dashboard/actions.ts.
 export function AddCertificationDialog({
   providerGroups,
 }: {
   providerGroups: ProviderGroup[];
 }) {
   const [open, setOpen] = useState(false);
-  // Audit FE-02: this was the only form in the app wrapping its Server Action
-  // in a client closure over startTransition. useActionState passes the
-  // action itself to <form action>, which is what the other three forms do.
   const [state, formAction, pending] = useActionState(
     addCertifications,
     initialAddCertificationsState,

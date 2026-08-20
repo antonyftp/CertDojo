@@ -24,9 +24,6 @@ import { DeadEnd } from "@/components/dead-end";
 import { Kicker } from "@/components/kicker";
 import { computeCertificationProgress } from "@/lib/progress/progress";
 
-// Audit A11Y-07: without this the page inherited the generic "CertDojo"
-// title from the root layout, so browser history and tab lists could not
-// tell the app's screens apart (WCAG 2.4.2).
 export const metadata: Metadata = { title: "Dashboard — CertDojo" };
 
 export default async function DashboardPage() {
@@ -103,8 +100,8 @@ export default async function DashboardPage() {
           </Kicker>
         </section>
         {cards.length === 0 ? (
-          // The block this empty state established is now shared with the 404
-          // and error screens (DESIGN.md Lot 7 amendment); it uses it too.
+          // Same block as the 404 and error screens (DESIGN.md
+          // "dead-end states").
           <DeadEnd
             kicker="Nothing tracked"
             title="No certifications tracked yet."

@@ -2,9 +2,9 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
-// Theme preference (SPECIFICATIONS.md §6.1, audit DS-01). Kept server-side in
-// a cookie rather than localStorage so the correct palette is present in the
-// first paint and the control works without JavaScript — see the Lot 9
+// Theme preference (SPECIFICATIONS.md §6.1). Kept server-side in a cookie
+// rather than localStorage so the correct palette is present in the first
+// paint and the control works without JavaScript — see the "theme control"
 // amendment in DESIGN.md for the reasoning.
 
 export const THEME_COOKIE = "certdojo-theme";

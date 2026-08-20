@@ -50,12 +50,9 @@ export function BlueprintStrip({
           </div>
         ))}
       </div>
-      {/* Audit DS-11: the weight labels were distributed by flex-basis with
-          no minimum width, so a narrow segment (an 8%-weighted domain) or a
-          narrow viewport crushed "8%" into an ellipsis or overflowed the row.
-          The container hides them below the width where they can be read;
-          the strip above stays, and the full breakdown is in its aria-label
-          and in each segment's title either way. */}
+      {/* Hidden below the width where an 8%-weighted segment's label would
+          still be readable. Nothing is lost: the strip itself stays, and the
+          full breakdown is in its aria-label and each segment's title. */}
       <div
         aria-hidden="true"
         className="text-muted-foreground @max-[22rem]:hidden flex gap-[3px] font-mono text-2xs"

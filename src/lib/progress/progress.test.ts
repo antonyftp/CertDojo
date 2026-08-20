@@ -131,7 +131,6 @@ describe("computeCertificationProgress", () => {
       attempt("q4", false),
       attempt("q5", false),
     ]);
-    // 3/5 = 60% < 80%
     expect(belowThreshold.status).toBe("in-progress");
 
     const atThreshold = computeCertificationProgress(meta, questions, [
@@ -141,7 +140,6 @@ describe("computeCertificationProgress", () => {
       attempt("q4", true),
       attempt("q5", false),
     ]);
-    // 4/5 = 80% >= 80%
     expect(atThreshold.status).toBe("exam-ready");
   });
 

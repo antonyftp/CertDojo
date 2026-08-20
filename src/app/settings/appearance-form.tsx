@@ -9,10 +9,8 @@ const CHOICES: { value: ThemePreference; label: string; hint: string }[] = [
   { value: "dark", label: "Dark", hint: "Graphite." },
 ];
 
-// Audit DS-01 / SPECIFICATIONS.md §6.1. A plain server-rendered form posting
-// to a Server Action: no client JavaScript, and it works with scripting
-// disabled. Rows are the app's one way of presenting a choice
-// (SheetOptionRow), the same as the quiz's batch picker.
+// Theme control (SPECIFICATIONS.md §6.1): a plain server-rendered form
+// posting to a Server Action, so it works with scripting disabled.
 export function AppearanceForm({ current }: { current: ThemePreference }) {
   return (
     <form action={setTheme} className="grid gap-4">

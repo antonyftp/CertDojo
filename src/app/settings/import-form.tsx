@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 const initialImportState: ImportState = { status: "idle" };
 
 // Import half of SPECIFICATIONS.md §5.5. Feedback is an inline mono status
-// line, never a toast (DESIGN.md Step 7 amendment): flag red for a rejected
+// line, never a toast (DESIGN.md "settings"): flag red for a rejected
 // file, verified green for restored records.
 export function ImportForm() {
   const [state, formAction, pending] = useActionState(

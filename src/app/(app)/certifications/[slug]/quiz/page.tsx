@@ -35,9 +35,9 @@ export default async function QuizPage({
     notFound();
   }
 
-  // Optional ?domain=<id> scopes the session to one blueprint domain
-  // (DEV_PLAN_V1.md Step 6): the filter is applied here, server-side, so the
-  // client session never even receives questions outside the domain. An id
+  // Optional ?domain=<id> scopes the session to one blueprint domain: the
+  // filter is applied here, server-side, so the client session never even
+  // receives questions outside the domain. An id
   // that is not in the blueprint is a broken/stale link → 404.
   let domain: { id: string; name: string } | null = null;
 
@@ -71,10 +71,9 @@ export default async function QuizPage({
   const backHref = domain ? `/certifications/${slug}` : "/dashboard";
   const backLabel = domain ? "Certification" : "Dashboard";
 
-  // Audit FE-01. Without ?batch= there is no session yet, so the setup screen
-  // renders from counts alone — the 517 KB of question text stays on the
-  // server. Only once a batch is chosen does the next request materialise
-  // exactly the questions that session needs.
+  // Without ?batch= there is no session yet and the setup screen renders from
+  // counts alone; only once a batch is chosen does this request materialise
+  // the questions it needs (see quiz-setup.tsx).
   const batch = batchParam === undefined ? null : parseBatchParam(batchParam);
 
   if (batch === null) {

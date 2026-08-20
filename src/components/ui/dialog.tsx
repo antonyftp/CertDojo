@@ -70,9 +70,8 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            /* Audit A11Y-11: with no padding the hit target was the 16x16
-               icon itself, under the 24x24 minimum of WCAG 2.5.8. The -m-2
-               keeps the icon optically where it was. */
+            /* p-2 brings the hit target above the 24x24 minimum of WCAG
+               2.5.8; -m-2 keeps the icon optically where it was. */
             className="absolute top-4 right-4 -m-2 rounded-xs p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <XIcon />

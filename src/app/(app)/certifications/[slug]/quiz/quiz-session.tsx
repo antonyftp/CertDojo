@@ -26,14 +26,12 @@ type Certification = {
 
 type Phase = "active" | "report";
 
-// The graded half of a session (DESIGN.md Step 5 amendment): marking the
+// The graded half of a session (DESIGN.md "quiz session screens"): marking the
 // answer sheet, then the score report. Attempts are persisted per answer by
 // the submitAnswer Server Action, so leaving mid-session loses nothing.
 //
-// Audit FE-01: the batch picker used to be a third phase here, which forced
-// the whole question bank into this component's props. The picking now
-// happens server-side from ?batch= (see quiz-setup.tsx), so `questions` is
-// exactly the session — nothing more is shipped to the browser.
+// `questions` is exactly the session and nothing more — the picking happens
+// server-side from ?batch= (see quiz-setup.tsx).
 export function QuizSession({
   certification,
   questions: sessionQuestions,
@@ -48,8 +46,8 @@ export function QuizSession({
   backLabel: string;
   // Where "Practice again" goes: the setup screen for this same scope.
   setupHref: string;
-  // Set when the session is scoped to one blueprint domain (Step 6): the
-  // question list is already filtered server-side; this only drives labels.
+  // Set when the session is scoped to one blueprint domain: the question list
+  // is already filtered server-side, so this only drives labels.
   domain?: { id: string; name: string } | null;
 }) {
   const [phase, setPhase] = useState<Phase>("active");
@@ -89,9 +87,8 @@ export function QuizSession({
       >
         {phase === "active" && currentQuestion ? (
           <span
-            // Audit A11Y-02: this counter changed silently for screen reader
-            // users (WCAG 4.1.3). Polite so it queues behind the question
-            // stem that takes focus on each new card.
+            // Announced on change (WCAG 4.1.3), politely so it queues behind
+            // the question stem that takes focus on each new card.
             role="status"
             aria-live="polite"
             className="text-muted-foreground truncate font-mono text-xs tracking-wider uppercase"

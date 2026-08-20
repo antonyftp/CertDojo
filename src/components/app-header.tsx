@@ -3,10 +3,9 @@ import Link from "next/link";
 
 import { BrandLockup } from "@/components/brand";
 
-// The slim top bar (DESIGN.md "Layout concept"). Audit DS-05: this markup was
-// reproduced verbatim in four files; DS-11: none of the copies could survive a
-// narrow viewport, having neither flex-wrap nor min-w-0/truncate on the
-// trailing slot.
+// The slim top bar (DESIGN.md "Layout concept"), shared by every screen. The
+// flex-wrap here and the min-w-0 on the trailing slot are what let it survive
+// a narrow viewport.
 export function AppHeader({
   homeHref = "/dashboard",
   children,

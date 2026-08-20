@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 
-// Placeholder cell for a value that has not arrived yet. `bg-muted` rather
-// than shadcn's default `bg-accent`: accent is the scantron blue tint, and
-// DESIGN.md reserves blue for interactive elements — a skeleton is the least
-// interactive thing on the page.
+// Placeholder cell for a value that has not arrived yet. `bg-muted`, not
+// shadcn's default `bg-accent`: accent is the scantron blue, and DESIGN.md
+// reserves blue for interactive elements.
 export function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

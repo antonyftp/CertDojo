@@ -38,13 +38,11 @@ export function OnboardingForm({
   );
 
   return (
-    // noValidate is deliberate (audit A11Y-09): the `required` attributes
-    // below exist so assistive tech announces the fields as required, but
-    // native bubble validation would preempt the server-side messages this
-    // form actually renders — and it could not cover the certification
-    // checkbox group at all, which would leave validation split across two
-    // mechanisms with two different wordings. The server stays the only
-    // validator; the browser only reports the state.
+    // noValidate is deliberate: the `required` attributes below exist so
+    // assistive tech announces the fields as required, but native bubble
+    // validation would preempt this form's server-side messages — and could
+    // not cover the certification checkbox group at all. The server stays the
+    // only validator; the browser only reports the state.
     <form action={formAction} noValidate className="grid gap-6">
       <Card>
         <CardHeader>
@@ -55,10 +53,6 @@ export function OnboardingForm({
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {/* Audit A11Y-03 / A11Y-09: aria-invalid was set but the error text
-              was never tied to the field (nothing in the repo used
-              aria-describedby), and both fields are required server-side
-              without saying so to the user or the accessibility tree. */}
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input

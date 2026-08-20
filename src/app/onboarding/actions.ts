@@ -62,10 +62,9 @@ export async function completeOnboarding(
     // empty dashboard with no way back into onboarding.
     // The upsert makes a retry after a partial failure a no-op rather than a
     // unique-constraint violation.
+    // addedAt set explicitly and slugs deduplicated: both are dual-dialect
+    // requirements, see the note in src/db/client.ts.
     const addedAt = new Date();
-    // Deduplicated because the same slug submitted twice would hit the unique
-    // index twice in one statement — which Postgres rejects outright ("ON
-    // CONFLICT DO UPDATE command cannot affect row a second time").
     const uniqueSlugs = [...new Set(certificationSlugs)];
 
     await db
@@ -73,9 +72,6 @@ export async function completeOnboarding(
       .values(
         uniqueSlugs.map((slug) => ({
           certificationSlug: slug,
-          // Set explicitly: Postgres' defaultNow() is evaluated once per
-          // statement while SQLite's $defaultFn is evaluated once per row, so
-          // a multi-row insert would otherwise drift between the two modes.
           addedAt,
         })),
       )

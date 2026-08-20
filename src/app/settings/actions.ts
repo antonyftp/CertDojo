@@ -65,9 +65,8 @@ export async function updateProfile(
     };
   }
 
-  // Audit FE-06: only these two screens show the name and job title.
-  // The previous revalidatePath("/", "layout") also dropped every
-  // /certifications/* entry, which a profile edit cannot affect.
+  // Only these two screens show the name and job title; a layout-wide
+  // revalidate would needlessly drop every /certifications/* entry too.
   revalidatePath("/settings");
   revalidatePath("/dashboard");
 
@@ -159,10 +158,9 @@ export async function importUserData(
   };
 }
 
-// Theme preference (audit DS-01). A Server Action writing a cookie, so the
-// control works with JavaScript disabled like every other write in the app.
-// No validation errors to report: the value comes from a fixed radio group
-// and anything else is simply rejected.
+// A Server Action writing a cookie, so the control works with JavaScript
+// disabled like every other write in the app. No validation errors to report:
+// the value comes from a fixed radio group, and anything else is rejected.
 export async function setTheme(formData: FormData): Promise<void> {
   const value = formData.get("theme");
 

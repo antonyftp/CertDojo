@@ -31,7 +31,7 @@ export function ProfileForm({
 
   return (
     // noValidate: `required` announces the state, the server owns the
-    // messages — same reasoning as the onboarding form (audit A11Y-09).
+    // messages — same reasoning as the onboarding form.
     <form action={formAction} noValidate className="grid gap-4">
       <div className="grid gap-2">
         <Label htmlFor="profile-name">Name</Label>
@@ -82,9 +82,6 @@ export function ProfileForm({
           {state.message}
         </p>
       ) : null}
-      {/* Audit DS-06: this was raw Tailwind green-600/green-400 while
-          import-form.tsx used the --mastery token for the same kind of success
-          line — two different greens on one page. */}
       {state.status === "success" ? (
         <p
           className="text-mastery font-mono text-xs tracking-widest uppercase"

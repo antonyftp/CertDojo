@@ -2,8 +2,8 @@
 // Server Action (grading) and the client session component (batch
 // selection). No server-only imports: must stay importable from the client.
 
-// A batch is what the user picks on the session setup screen
-// (DEV_PLAN_V1.md Step 5: "all / not-yet-mastered / N random").
+// A batch is what the user picks on the session setup screen:
+// all / not-yet-mastered / N random.
 export type SessionBatch =
   { kind: "all" } | { kind: "unmastered" } | { kind: "random"; count: number };
 
@@ -55,10 +55,10 @@ export function pickSessionQuestions<T extends { id: string }>(
   }
 }
 
-// The batch as it travels in the URL (audit FE-01). Putting the choice in
-// `?batch=` — the way `?domain=` already works — is what lets the server pick
-// the session's questions and send only those, instead of shipping the whole
-// bank to the client and filtering it after hydration.
+// The batch as it travels in the URL. Putting the choice in `?batch=` — the
+// way `?domain=` already works — is what lets the server pick the session's
+// questions and send only those, instead of shipping the whole bank to the
+// client and filtering it after hydration.
 export type BatchParam = "all" | "unmastered" | `random-${number}`;
 
 export function batchParamValue(batch: SessionBatch): BatchParam {

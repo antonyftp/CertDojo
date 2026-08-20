@@ -5,12 +5,11 @@ import { useEffect } from "react";
 import { DeadEnd, DeadEndHeader } from "@/components/dead-end";
 import { Button } from "@/components/ui/button";
 
-// Audit FE-04. Placed at the app root rather than inside (app): an error file
-// wraps its CHILD segments, so this one also covers /settings, /onboarding,
-// and the getUserProfile() read in (app)/layout.tsx — the most likely thing
-// to throw when the database is unreachable. It cannot catch a failure in the
-// root layout itself; that would need global-error.tsx, which renders its own
-// document without the app's styles and is not worth it here.
+// At the app root rather than inside (app): an error file wraps its CHILD
+// segments, so this one also covers /settings, /onboarding, and the
+// getUserProfile() read in (app)/layout.tsx — the most likely thing to throw
+// when the database is unreachable. A failure in the root layout itself would
+// need global-error.tsx, which renders without the app's styles; not worth it.
 export default function AppError({
   error,
   retry,

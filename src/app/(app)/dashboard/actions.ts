@@ -50,9 +50,8 @@ export async function addCertifications(
 
   const { db, schema } = getDatabase();
 
-  // Deduplicated because the same slug submitted twice would hit the unique
-  // index twice in one statement — which Postgres rejects outright ("ON
-  // CONFLICT DO UPDATE command cannot affect row a second time").
+  // Slugs deduplicated and addedAt set explicitly: both are dual-dialect
+  // requirements, see the note in src/db/client.ts.
   const uniqueSlugs = [...new Set(certificationSlugs)];
   const addedAt = new Date();
 
@@ -65,9 +64,6 @@ export async function addCertifications(
     .values(
       uniqueSlugs.map((slug) => ({
         certificationSlug: slug,
-        // Set explicitly: Postgres' defaultNow() is evaluated once per
-        // statement while SQLite's $defaultFn is evaluated once per row, so a
-        // multi-row insert would otherwise drift between the two modes.
         addedAt,
       })),
     )

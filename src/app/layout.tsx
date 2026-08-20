@@ -22,19 +22,17 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  // Audit DS-01. Reading the cookie here makes the root layout dynamic, which
-  // costs nothing in practice: every page in the app is already
-  // force-dynamic. In exchange the correct palette is in the first byte of
-  // HTML — no theme flash, and no client-side theme script.
+  // Reading the cookie here makes the root layout dynamic, which costs
+  // nothing: every page in the app is already force-dynamic. In exchange the
+  // correct palette is in the first byte of HTML — no theme flash, and no
+  // client-side theme script.
   const theme = themeAttribute(await getThemePreference());
 
   return (
     <html lang="en" data-theme={theme} className="h-full antialiased">
       <body className="bg-background text-foreground min-h-full font-sans">
-        {/* Audit A11Y-08: the header is retraversed on every navigation and
-            the app had no bypass mechanism (WCAG 2.4.1). Visually hidden
-            until focused, where it becomes the first thing a keyboard user
-            reaches. Every <main> in the app carries #main-content. */}
+        {/* Bypass block for the header, retraversed on every navigation
+            (WCAG 2.4.1). Every <main> in the app carries #main-content. */}
         <a
           href="#main-content"
           // Padding lives on the focus variant: applied unconditionally it

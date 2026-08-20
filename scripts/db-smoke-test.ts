@@ -1,5 +1,5 @@
 // Writes then reads back a row in each table, for the currently detected
-// mode (DEV_PLAN_V1.md Step 1). Without POSTGRES_URL it runs against a
+// mode. Without POSTGRES_URL it runs against a
 // throwaway SQLite file; with POSTGRES_URL set (e.g. a dev Neon database)
 // the same code exercises the Postgres adapter. Inserted rows are removed
 // at the end, so it is safe to run against a real database.

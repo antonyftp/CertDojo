@@ -1,7 +1,7 @@
 import { BrandLockup } from "@/components/brand";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Audit FE-03. The quiz opens on its setup phase (batch picker), so this
+// The quiz opens on its setup phase (batch picker), so this
 // mirrors that — max-w-2xl column, identity block, then the answer-sheet rows
 // of the batch choices — not the question view the user has not reached yet.
 export default function QuizLoading() {

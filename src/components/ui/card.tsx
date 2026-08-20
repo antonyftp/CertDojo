@@ -28,11 +28,10 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-// Audit A11Y-04: shadcn renders CardTitle as a <div>, so every card heading
-// in the app ("About you", "Certifications to track", "Candidate", "Export",
-// "Import") was invisible to heading navigation (WCAG 1.3.1). `as` defaults
-// to h3, which is the right level under each page's h1 and section h2s, and
-// stays overridable where a card sits at a different depth.
+// Diverges from shadcn, which renders CardTitle as a <div> — invisible to
+// heading navigation (WCAG 1.3.1). h3 is the right level under each page's h1
+// and section h2s, and stays overridable where a card sits at a different
+// depth.
 function CardTitle({
   className,
   as: Component = "h3",

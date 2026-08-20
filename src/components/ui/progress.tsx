@@ -5,11 +5,9 @@ import { Progress as ProgressPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 
-// Audit DS-02: the indicator was hardcoded to bg-primary, so both "mastery"
-// callers overrode it through the arbitrary selector
-// `[&>[data-slot=progress-indicator]]:bg-mastery`. The tone is part of what a
-// progress bar means here — DESIGN.md reserves blue for interactive elements,
-// green and gold for what has been earned — so it belongs in the component.
+// Tone is part of what a progress bar means here, so it lives in the component
+// rather than in a caller's override: DESIGN.md reserves blue for interactive
+// elements, green and gold for what has been earned.
 const TONES = {
   primary: { track: "bg-primary/20", indicator: "bg-primary" },
   mastery: { track: "bg-muted", indicator: "bg-mastery" },

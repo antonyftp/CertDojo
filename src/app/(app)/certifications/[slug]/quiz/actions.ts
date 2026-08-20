@@ -8,8 +8,8 @@ import { getCertificationBySlug, getQuestions } from "@/lib/content/loader";
 import { gradeAnswer } from "@/lib/quiz/quiz";
 
 // Grading happens exclusively on the server: the client never holds
-// correctOptionIds or the explanation before submitting (DESIGN.md Step 5
-// amendment), and receives both only in this action's response.
+// correctOptionIds or the explanation before submitting (DESIGN.md "quiz
+// session screens"), and receives both only in this action's response.
 export type SubmitAnswerResult =
   | {
       status: "graded";

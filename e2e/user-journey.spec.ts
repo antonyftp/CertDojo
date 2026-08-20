@@ -68,16 +68,13 @@ test("onboarding is never shown again once completed", async ({ page }) => {
   await expect(page).toHaveURL(/\/dashboard$/);
 });
 
-// Step 5/10: the quiz leg of the critical flow. The spec imports the real
-// question bank so it can look up whichever question the app actually
-// shows and answer it correctly, then assert the exact progress the
-// dashboard must show afterward. The bank (449 questions) is far too large
-// to walk in full inside a browser test, so the session uses the app's
-// real "20 random" batch option rather than "All questions" — this also
-// means question order isn't known ahead of time, so each question is
-// looked up by its rendered text instead of by index. Answer inputs are
-// visually-hidden radios/checkboxes, so options are clicked via their
-// label text.
+// The quiz leg of the critical flow. Imports the real question bank so it can
+// answer correctly whichever question the app shows, then asserts the exact
+// progress the dashboard must show afterward. The bank (449 questions) is too
+// large to walk in full, so the session uses the app's "20 random" batch —
+// which also means question order is unknown, hence the lookups by rendered
+// text rather than by index. Options are clicked via their label text, since
+// the inputs themselves are visually hidden.
 test("a full practice session is graded and reflected on the dashboard", async ({
   page,
 }) => {
@@ -152,10 +149,9 @@ test("a full practice session is graded and reflected on the dashboard", async (
   await expect(dvaCard.getByText("In progress", { exact: true })).toBeVisible();
 });
 
-// Audit A11Y-01/02/08: the quiz was the app's least accessible screen — the
-// grade was carried by the green/red pair alone, and remounting the card on
-// every question dropped keyboard focus to <body>. These are silent
-// regressions by nature (nothing looks broken), so they are pinned here.
+// The quiz's accessibility contract: a grade that survives greyscale, focus
+// that follows the remounted card, and a working skip link. All three are
+// silent regressions by nature — nothing looks broken — so they are pinned.
 test("the quiz is navigable and gradeable without relying on colour", async ({
   page,
 }) => {
@@ -175,7 +171,6 @@ test("the quiz is navigable and gradeable without relying on colour", async ({
   const expanded = await skipLink.boundingBox();
   expect(expanded!.width).toBeGreaterThan(50);
 
-  // And it has to actually reach the content.
   await page.keyboard.press("Enter");
   expect(await page.evaluate(() => window.location.hash)).toBe("#main-content");
 
@@ -221,10 +216,9 @@ test("the quiz is navigable and gradeable without relying on colour", async ({
   await expectStemFocused();
 });
 
-// Audit DS-01 / SPECIFICATIONS.md §6.1: the theme control the CSS had
-// promised since Step 4. Three states, and "System" has to be a real one —
-// meaning no data-theme attribute at all, so the stylesheet's
-// `color-scheme: light dark` follows the OS.
+// The theme control (SPECIFICATIONS.md §6.1). Three states, and "System" has
+// to be a real one — meaning no data-theme attribute at all, so the
+// stylesheet's `color-scheme: light dark` follows the OS.
 test("the appearance control switches theme and keeps System as a real state", async ({
   page,
 }) => {
@@ -252,7 +246,7 @@ test("the appearance control works with JavaScript disabled", async ({
   browser,
 }) => {
   // The whole reason this is a cookie and a form rather than localStorage and
-  // a click handler (DESIGN.md Lot 9 amendment). If this ever fails, the
+  // a click handler (DESIGN.md "theme control"). If this ever fails, the
   // control silently became a widget.
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
@@ -268,9 +262,8 @@ test("the appearance control works with JavaScript disabled", async ({
   }
 });
 
-// Audit FE-04: notFound() had no custom UI, so these routes fell through to
-// Next's unstyled default page. Both the notFound() calls inside the app and
-// a URL matching no route at all resolve to the same screen.
+// Both the notFound() calls inside the app and a URL matching no route at all
+// must resolve to the same custom screen.
 test("unknown certifications and unmatched URLs land on the branded 404", async ({
   page,
 }) => {
@@ -282,13 +275,12 @@ test("unknown certifications and unmatched URLs land on the branded 404", async 
   await page.getByRole("link", { name: "Back to dashboard" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
 
-  // Same screen for a route the app does not define at all.
   await page.goto("/no-such-page");
   await expect(page.getByText("404 · No record")).toBeVisible();
 
   // And for stale query links the quiz route rejects: an unknown domain, and
-  // a batch size the setup screen never offers (audit FE-01 put the batch in
-  // the URL, so it has to be validated like any other input).
+  // a batch size the setup screen never offers — the batch travels in the
+  // URL, so it has to be validated like any other input.
   await page.goto("/certifications/dva-c02/quiz?domain=not-a-domain");
   await expect(page.getByText("404 · No record")).toBeVisible();
 

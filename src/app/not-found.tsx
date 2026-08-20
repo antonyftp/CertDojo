@@ -3,10 +3,8 @@ import Link from "next/link";
 import { DeadEnd, DeadEndHeader } from "@/components/dead-end";
 import { Button } from "@/components/ui/button";
 
-// Audit FE-04: notFound() is called in three places (certifications/[slug],
-// and twice in the quiz route) but there was no custom 404, so those paths —
-// and any unmatched URL — fell through to Next's unstyled default page.
-// A root not-found.tsx covers both cases at once.
+// Covers both the notFound() calls inside the app (certifications/[slug], and
+// twice in the quiz route) and any URL matching no route at all.
 export default function NotFound() {
   return (
     <div className="min-h-dvh">

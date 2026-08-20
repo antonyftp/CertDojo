@@ -1,8 +1,8 @@
 # CertDojo — Design plan (SPECIFICATIONS.md §6.2)
 
-Written before Step 4 UI implementation; applies to every screen after it
-(quiz, certification detail, settings). Any new screen must follow this plan
-or amend it here first.
+Written before the first screen (the dashboard) was built; applies to every
+screen after it (quiz, certification detail, settings). Any new screen must
+follow this plan or amend it here first.
 
 ## Concept
 
@@ -78,7 +78,7 @@ marketing site (spec §6.1).
 └────────────────────────────────────────────────────────────────┘
 ```
 
-### Quiz (Step 5, sketched now for consistency)
+### Quiz (sketched now for consistency)
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -107,7 +107,7 @@ the official domain weight*, each segment *filling* with that domain's
 mastery (verified green, turning seal gold at the exam-ready threshold).
 At a glance it answers the only question that matters while revising: *which
 heavy domains am I weak in?* It appears on the dashboard card, will anchor
-the certification detail view (Step 6), and no other decorative element in
+the certification detail view, and no other decorative element in
 the UI is allowed to compete with it.
 
 ## Critique (required by §6.2)
@@ -137,7 +137,7 @@ exotic layout.
 
 ---
 
-## Step 5 amendment — quiz session screens
+## Amendment — quiz session screens
 
 The quiz route (`/certifications/[slug]/quiz`) is one page with three states.
 Palette, type roles, and the blue-is-interactive contract are unchanged; the
@@ -162,10 +162,10 @@ sheet**, and the end screen is the **score report**.
 └────────────────────────────────────────────────────────────────┘
 ```
 
-Batch choices are radio rows in the data voice (mono, counts right-aligned),
-matching the dev plan's "all / not-yet-mastered / N random". A random size is
-only offered when it is smaller than the bank; "not yet mastered" is disabled
-with a note when nothing remains.
+The three batch choices — all / not-yet-mastered / N random — are radio rows
+in the data voice (mono, counts right-aligned). A random size is only offered
+when it is smaller than the bank; "not yet mastered" is disabled with a note
+when nothing remains.
 
 ### State 2 — Question (marking the sheet)
 
@@ -210,7 +210,7 @@ not an exam simulator; a countdown would add anxiety without adding signal.
 
 ---
 
-## Step 6 amendment — certification detail view
+## Amendment — certification detail view
 
 The detail route (`/certifications/[slug]`) is the **full score report** for
 one certification — the page the test center hands you, expanded into a
@@ -305,7 +305,7 @@ progress dots, celebratory end screen. What differs here and why:
 
 ---
 
-## Step 7 amendment — settings (data export / import)
+## Amendment — settings (data export / import)
 
 The settings route (`/settings`) is the **candidate records office**: the desk
 at the test center where you request your transcript or hand over records
@@ -392,7 +392,7 @@ toast notifications. What differs and why:
    Checked against the three banned defaults: still no cream/serif/
    terracotta, no acid-on-black, no broadsheet hairlines.
 
-## Lot 7 amendment — interstitial and dead-end states (loading / not found / error)
+## Amendment — interstitial and dead-end states (loading / not found / error)
 
 Audit findings FE-03 and FE-04: the app had no `loading.tsx`, no `error.tsx`
 and no `not-found.tsx`, so every route rendered nothing until its database
@@ -459,7 +459,7 @@ Something went wrong 😕", and a toast. What differs and why:
 1. **No spinner anywhere.** A spinner communicates "wait" and nothing else; a
    skeleton of the actual page communicates what is coming and holds its
    space. The app already refuses spinner theater for the export download
-   (Step 7 amendment) — same reasoning.
+   (the settings amendment) — same reasoning.
 2. **No apology copy and no mascot.** The records-office voice states the
    fact ("No record found") and offers the one action that helps. This is a
    revision tool for adults preparing an exam, not a consumer app performing
@@ -477,15 +477,16 @@ layout.tsx` awaits `getUserProfile()` before rendering any child, so on a
 slow database the first paint still waits for that one query. Moving the
 header into the layout and wrapping the content in `<Suspense>` — the audit's
 "à terme" suggestion — is what would remove that last block; it is not done
-here because the header is still duplicated across four pages (DS-05, Lot 9).
+here because the header is still duplicated across four pages.
 
-## Lot 9 amendment — theme control and the shared primitives
+## Amendment — theme control and the shared primitives
 
 Two things happen in this lot. The design-system findings (DS-02 → DS-11) are
 extractions of patterns already on screen — a shared header, a status badge, a
 kicker, the answer-sheet option row — and change nothing visually except where
 a token was being contradicted. The one genuinely new surface is the theme
-control, which `globals.css` has promised in a comment since Step 4 and
+control, which `globals.css` has promised in a comment since the palette was
+first written and
 `SPECIFICATIONS.md` §6.1 requires.
 
 ### Appearance control

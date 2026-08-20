@@ -3,9 +3,7 @@ import type { ElementType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 // The "mono kicker" (DESIGN.md): small uppercase mono label naming a section
-// or qualifying a value. Audit DS-07 counted ~24 hand-written copies of the
-// same class string, plus one local SectionKicker in settings that was never
-// exported. This is the single definition.
+// or qualifying a value. Single definition — never hand-write the classes.
 export function Kicker({
   children,
   className,

@@ -7,29 +7,16 @@ import { afterEach, beforeEach } from "vitest";
 import { getDatabase, type AppDatabase, type AppSchema } from "@/db/client";
 import { runMigrations } from "@/db/migrate";
 
-// Shared fixture for integration tests that exercise real SQLite writes
-// (queries, server actions, backup import/export). Mirrors the pattern
-// pioneered in quiz/actions.test.ts: a throwaway SQLite file per test via
-// `SQLITE_PATH`, migrated fresh, with POSTGRES_URL/DATABASE_URL/VERCEL
-// cleared so `getRuntimeMode()` always resolves to "sqlite" here regardless
-// of the host environment.
+// Shared fixture for integration tests that exercise real SQLite writes: a
+// throwaway file per test via `SQLITE_PATH`, migrated fresh, with
+// POSTGRES_URL/DATABASE_URL/VERCEL cleared so `getRuntimeMode()` always
+// resolves to "sqlite" regardless of the host environment.
 //
-// Runs per-TEST (beforeEach/afterEach), not per-file: every test gets its
-// own empty, migrated database and there is no implicit ordering between
-// tests, even within the same describe block.
+// Registers beforeEach/afterEach, not beforeAll: every test gets its own
+// empty database, so there is no implicit ordering even within a describe.
 //
-// Usage:
-//   const getDb = setupSqliteDatabase();
-//   it("...", async () => {
-//     const { db, schema } = getDb();
-//     ...
-//   });
-//
-// Named without a "use" prefix on purpose: it registers beforeEach/afterEach
-// hooks via plain function calls (not React hook semantics), and the
-// react-hooks ESLint rule treats any `use*`-named function as a hook that
-// must be called from a component/hook body — which this call site, a test
-// file's module scope, is not.
+// Not named `use*` on purpose — the react-hooks ESLint rule would treat it as
+// a React hook and reject the call from a test file's module scope.
 export function setupSqliteDatabase(): () => {
   db: AppDatabase;
   schema: AppSchema;

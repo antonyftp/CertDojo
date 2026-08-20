@@ -3,14 +3,12 @@ import { Kicker } from "@/components/kicker";
 import { SheetOptionRow } from "@/components/sheet-option-row";
 import { Button } from "@/components/ui/button";
 
-// The exam form: pick a batch, then start (DESIGN.md Step 5 amendment).
+// The exam form: pick a batch, then start (DESIGN.md "quiz session screens").
 //
-// Audit FE-01: this used to be the first phase of the client session
-// component, which meant the whole question bank (517 KB of JSON for
-// dva-c02) was serialised into the page just so the client could filter it
-// after hydration. It is now a server component that ships counts only — the
-// questions themselves are fetched by the next request, once the batch is
-// known.
+// A server component that ships counts only. The batch travels in the URL, so
+// the questions themselves are picked server-side on the next request and the
+// bank (517 KB of JSON for dva-c02) never reaches the browser. This is the
+// canonical note for that design; page.tsx and quiz-session.tsx point here.
 //
 // A plain GET form: submitting sets ?batch= on the same URL. No JavaScript,
 // no Server Action, and the resulting URL is shareable and re-runnable.
